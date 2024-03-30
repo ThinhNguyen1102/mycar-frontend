@@ -1,12 +1,19 @@
-import {Box, ChakraProvider, Icon, Text, VStack} from '@chakra-ui/react'
-import {theme} from './styles/theme'
-import {FaAdjust} from 'react-icons/fa'
+import {BrowserRouter, Route, Routes} from 'react-router-dom'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Navigation from './components/Navigation'
+import {VStack} from '@chakra-ui/react'
+import NoMatch from './components/NoMatch'
+import Layout from './components/Layout'
+import Signup from './pages/Signup'
 
 export const App = () => (
-  <VStack>
-    <Text color="primary.500" fontSize="64px">
-      Hello
-    </Text>
-    <Icon as={FaAdjust} color="primary.500" fontSize="32px" />
+  <VStack gap="0px">
+    <Routes>
+      <Route path="/" element={<Layout />} />
+      <Route path="login" element={<Login />} />
+      <Route path="signup" element={<Signup />} />
+      <Route path="*" element={<NoMatch />} />
+    </Routes>
   </VStack>
 )
