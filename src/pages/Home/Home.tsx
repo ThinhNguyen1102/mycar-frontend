@@ -1,9 +1,23 @@
-import {Box, Button, Divider, HStack, Icon, Stack, Text, VStack} from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Divider,
+  HStack,
+  Icon,
+  Stack,
+  Text,
+  useDisclosure,
+  VStack
+} from '@chakra-ui/react'
 import {IoLocationOutline} from 'react-icons/io5'
 import {MdOutlineKeyboardArrowDown} from 'react-icons/md'
 import {CiCalendarDate} from 'react-icons/ci'
+import AddressSelectModel from '../../components/AddressSelectModal'
+import DateSelectModal from '../../components/DateSelectModal'
 
 function Home() {
+  const {isOpen: isOpenAddress, onOpen: onOpenAddress, onClose: onCloseAddress} = useDisclosure()
+  const {isOpen: isOpenDate, onOpen: onOpenDate, onClose: onCloseDate} = useDisclosure()
   return (
     <VStack pt="0px" w="calc(100vw - 10px)" bg="background" pl="80px" pr="80px">
       <Box w="100%" borderRadius="10px" overflow="hidden" position="relative">
@@ -28,7 +42,13 @@ function Home() {
             </Box>
             <Text color="text.gray">Địa điểm</Text>
           </HStack>
-          <HStack w="90%" as="button" ml="32px" justifyContent="space-between">
+          <HStack
+            w="90%"
+            as="button"
+            ml="32px"
+            justifyContent="space-between"
+            onClick={onOpenAddress}
+          >
             <Text fontSize="20px" fontWeight="bold">
               Hà Nội
             </Text>
@@ -45,7 +65,7 @@ function Home() {
             </Box>
             <Text color="text.gray">Thời gian thuê</Text>
           </HStack>
-          <HStack w="90%" as="button" ml="32px" justifyContent="space-between">
+          <HStack w="90%" as="button" ml="32px" justifyContent="space-between" onClick={onOpenDate}>
             <Text fontSize="20px" fontWeight="bold">
               Hà Nộiiiiiiiiiiiiiiiiiiiiiiii
             </Text>
@@ -60,6 +80,8 @@ function Home() {
           </Button>
         </Box>
       </Stack>
+      <AddressSelectModel isOpen={isOpenAddress} onClose={onCloseAddress} />
+      <DateSelectModal isOpen={isOpenDate} onClose={onCloseDate} />
     </VStack>
   )
 }

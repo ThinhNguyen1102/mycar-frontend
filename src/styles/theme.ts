@@ -27,6 +27,10 @@ export const theme = extendTheme(
         },
         '::-webkit-scrollbar-thumb:hover': {
           background: '#555'
+        },
+        '.rdp': {
+          '--rdp-background-color': '#F5F5F7',
+          '--rdp-accent-color': '#6e6e73'
         }
       })
     }
