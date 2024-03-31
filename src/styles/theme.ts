@@ -12,6 +12,23 @@ export const theme = extendTheme(
         light: '#ffffff'
       },
       background: '#F5F5F7'
+    },
+    styles: {
+      global: (props: any) => ({
+        '::-webkit-scrollbar': {
+          width: '10px'
+        },
+        '::-webkit-scrollbar-track': {
+          background: 'white'
+        },
+        '::-webkit-scrollbar-thumb': {
+          background: '#888',
+          borderRadius: '5px'
+        },
+        '::-webkit-scrollbar-thumb:hover': {
+          background: '#555'
+        }
+      })
     }
   },
   withDefaultColorScheme({colorScheme: 'primary'})
