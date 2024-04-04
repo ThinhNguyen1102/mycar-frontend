@@ -5,10 +5,12 @@ import {BsFuelPump} from 'react-icons/bs'
 import {FaRegStar} from 'react-icons/fa'
 import {BsLuggage} from 'react-icons/bs'
 import {IoLocationOutline} from 'react-icons/io5'
+import {useNavigate} from 'react-router-dom'
 // import {MdOutlineElectricCar} from 'react-icons/md'
 // import {BsFuelPumpDiesel} from 'react-icons/bs'
 
 function CarRentalPostItem() {
+  const navigate = useNavigate()
   return (
     <VStack
       as="button"
@@ -19,6 +21,9 @@ function CarRentalPostItem() {
       borderRadius="10px"
       gap="20px"
       _hover={{boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'}}
+      onClick={() => {
+        navigate('/post/1')
+      }}
     >
       <Box borderRadius="10px" overflow="hidden">
         <img
