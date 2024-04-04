@@ -1,7 +1,8 @@
-import {Avatar, Box, Divider, HStack, Icon, Text, VStack} from '@chakra-ui/react'
+import {Avatar, Box, Divider, HStack, Icon, Text} from '@chakra-ui/react'
 import {Link} from 'react-router-dom'
 import {IoMdNotificationsOutline} from 'react-icons/io'
 import {MdOutlineKeyboardArrowDown} from 'react-icons/md'
+import ConnectWallet from './ConnectWallet'
 
 function Navigation() {
   return (
@@ -39,6 +40,7 @@ function Navigation() {
             <Icon as={MdOutlineKeyboardArrowDown} />
           </Box>
         </HStack>
+        <ConnectWallet />
       </HStack>
     </HStack>
   )

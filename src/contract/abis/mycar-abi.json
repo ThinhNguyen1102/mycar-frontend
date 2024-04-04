@@ -1,0 +1,406 @@
+[
+  {"inputs": [], "stateMutability": "nonpayable", "type": "constructor"},
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": false, "internalType": "uint256", "name": "contract_id", "type": "uint256"},
+      {"indexed": false, "internalType": "address", "name": "owner_address", "type": "address"},
+      {"indexed": false, "internalType": "string", "name": "owner_email", "type": "string"},
+      {"indexed": false, "internalType": "address", "name": "renter_address", "type": "address"},
+      {"indexed": false, "internalType": "string", "name": "renter_email", "type": "string"}
+    ],
+    "name": "CarContractCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": false, "internalType": "uint256", "name": "contract_id", "type": "uint256"}
+    ],
+    "name": "CarContractEnded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": false, "internalType": "uint256", "name": "contract_id", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "renter_amount", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "owner_amount", "type": "uint256"}
+    ],
+    "name": "CarContractRefunded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": false, "internalType": "uint256", "name": "contract_id", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "renter_amount", "type": "uint256"}
+    ],
+    "name": "CarContractRefundedOwnerCanceled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": false, "internalType": "uint256", "name": "contract_id", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "renter_amount", "type": "uint256"}
+    ],
+    "name": "CarContractRefundedOwnerRejected",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": false, "internalType": "uint256", "name": "contract_id", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "renter_amount", "type": "uint256"},
+      {"indexed": false, "internalType": "uint256", "name": "owner_amount", "type": "uint256"}
+    ],
+    "name": "CarContractRefundedRenterCanceled",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": false, "internalType": "uint256", "name": "contract_id", "type": "uint256"}
+    ],
+    "name": "CarContractStarted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "internalType": "address", "name": "previousOwner", "type": "address"},
+      {"indexed": true, "internalType": "address", "name": "newOwner", "type": "address"}
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": false, "internalType": "uint256", "name": "contract_id", "type": "uint256"},
+      {"indexed": false, "internalType": "string", "name": "email", "type": "string"},
+      {"indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256"},
+      {"indexed": false, "internalType": "address", "name": "sender", "type": "address"}
+    ],
+    "name": "PaymentReceived",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32"},
+      {"indexed": true, "internalType": "bytes32", "name": "previousAdminRole", "type": "bytes32"},
+      {"indexed": true, "internalType": "bytes32", "name": "newAdminRole", "type": "bytes32"}
+    ],
+    "name": "RoleAdminChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32"},
+      {"indexed": true, "internalType": "address", "name": "account", "type": "address"},
+      {"indexed": true, "internalType": "address", "name": "sender", "type": "address"}
+    ],
+    "name": "RoleGranted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "internalType": "bytes32", "name": "role", "type": "bytes32"},
+      {"indexed": true, "internalType": "address", "name": "account", "type": "address"},
+      {"indexed": true, "internalType": "address", "name": "sender", "type": "address"}
+    ],
+    "name": "RoleRevoked",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [{"internalType": "bytes32", "name": "", "type": "bytes32"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MANAGER_ROLE",
+    "outputs": [{"internalType": "bytes32", "name": "", "type": "bytes32"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "uint256", "name": "contract_id", "type": "uint256"},
+      {"internalType": "string", "name": "owner_email", "type": "string"},
+      {"internalType": "address", "name": "owner_address", "type": "address"},
+      {"internalType": "string", "name": "renter_email", "type": "string"},
+      {"internalType": "address", "name": "renter_address", "type": "address"},
+      {"internalType": "uint256", "name": "rental_price_per_day", "type": "uint256"},
+      {"internalType": "uint256", "name": "over_limit_fee", "type": "uint256"},
+      {"internalType": "uint256", "name": "over_time_fee", "type": "uint256"},
+      {"internalType": "uint256", "name": "cleaning_fee", "type": "uint256"},
+      {"internalType": "uint256", "name": "deodorization_fee", "type": "uint256"},
+      {"internalType": "uint256", "name": "num_of_days", "type": "uint256"},
+      {"internalType": "uint256", "name": "start_date", "type": "uint256"},
+      {"internalType": "uint256", "name": "end_date", "type": "uint256"},
+      {"internalType": "string", "name": "car_model", "type": "string"},
+      {"internalType": "string", "name": "car_plate", "type": "string"}
+    ],
+    "name": "createContract",
+    "outputs": [
+      {"internalType": "uint256", "name": "", "type": "uint256"},
+      {"internalType": "address", "name": "", "type": "address"},
+      {"internalType": "string", "name": "", "type": "string"},
+      {"internalType": "address", "name": "", "type": "address"},
+      {"internalType": "string", "name": "", "type": "string"}
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "uint256", "name": "contract_id", "type": "uint256"},
+      {"internalType": "bool", "name": "is_over_limit", "type": "bool"},
+      {"internalType": "uint256", "name": "over_times", "type": "uint256"},
+      {"internalType": "bool", "name": "is_cleaning_fee", "type": "bool"},
+      {"internalType": "bool", "name": "is_deodorization_fee", "type": "bool"}
+    ],
+    "name": "endContract",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "uint256", "name": "contract_id", "type": "uint256"}],
+    "name": "getCarContractWithId",
+    "outputs": [
+      {
+        "components": [
+          {"internalType": "uint256", "name": "contract_id", "type": "uint256"},
+          {"internalType": "string", "name": "owner_email", "type": "string"},
+          {"internalType": "address", "name": "owner_address", "type": "address"},
+          {"internalType": "string", "name": "renter_email", "type": "string"},
+          {"internalType": "address", "name": "renter_address", "type": "address"},
+          {"internalType": "uint256", "name": "rental_price_per_day", "type": "uint256"},
+          {"internalType": "uint256", "name": "mortgage", "type": "uint256"},
+          {"internalType": "uint256", "name": "over_limit_fee", "type": "uint256"},
+          {"internalType": "uint256", "name": "over_time_fee", "type": "uint256"},
+          {"internalType": "uint256", "name": "cleaning_fee", "type": "uint256"},
+          {"internalType": "uint256", "name": "deodorization_fee", "type": "uint256"},
+          {"internalType": "uint256", "name": "num_of_days", "type": "uint256"},
+          {"internalType": "uint256", "name": "start_date", "type": "uint256"},
+          {"internalType": "uint256", "name": "end_date", "type": "uint256"},
+          {"internalType": "string", "name": "car_model", "type": "string"},
+          {"internalType": "string", "name": "car_plate", "type": "string"},
+          {"internalType": "enum MyCar.CarContractStatus", "name": "status", "type": "uint8"},
+          {"internalType": "uint256", "name": "created_at", "type": "uint256"}
+        ],
+        "internalType": "struct MyCar.CarContract",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCarContracts",
+    "outputs": [
+      {
+        "components": [
+          {"internalType": "uint256", "name": "contract_id", "type": "uint256"},
+          {"internalType": "string", "name": "owner_email", "type": "string"},
+          {"internalType": "address", "name": "owner_address", "type": "address"},
+          {"internalType": "string", "name": "renter_email", "type": "string"},
+          {"internalType": "address", "name": "renter_address", "type": "address"},
+          {"internalType": "uint256", "name": "rental_price_per_day", "type": "uint256"},
+          {"internalType": "uint256", "name": "mortgage", "type": "uint256"},
+          {"internalType": "uint256", "name": "over_limit_fee", "type": "uint256"},
+          {"internalType": "uint256", "name": "over_time_fee", "type": "uint256"},
+          {"internalType": "uint256", "name": "cleaning_fee", "type": "uint256"},
+          {"internalType": "uint256", "name": "deodorization_fee", "type": "uint256"},
+          {"internalType": "uint256", "name": "num_of_days", "type": "uint256"},
+          {"internalType": "uint256", "name": "start_date", "type": "uint256"},
+          {"internalType": "uint256", "name": "end_date", "type": "uint256"},
+          {"internalType": "string", "name": "car_model", "type": "string"},
+          {"internalType": "string", "name": "car_plate", "type": "string"},
+          {"internalType": "enum MyCar.CarContractStatus", "name": "status", "type": "uint8"},
+          {"internalType": "uint256", "name": "created_at", "type": "uint256"}
+        ],
+        "internalType": "struct MyCar.CarContract[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "bytes32", "name": "role", "type": "bytes32"}],
+    "name": "getRoleAdmin",
+    "outputs": [{"internalType": "bytes32", "name": "", "type": "bytes32"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "bytes32", "name": "role", "type": "bytes32"},
+      {"internalType": "address", "name": "account", "type": "address"}
+    ],
+    "name": "grantRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "bytes32", "name": "role", "type": "bytes32"},
+      {"internalType": "address", "name": "account", "type": "address"}
+    ],
+    "name": "hasRole",
+    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "uint256", "name": "contract_id", "type": "uint256"},
+      {"internalType": "string", "name": "email", "type": "string"},
+      {"internalType": "uint256", "name": "amount", "type": "uint256"}
+    ],
+    "name": "pay",
+    "outputs": [
+      {"internalType": "uint256", "name": "", "type": "uint256"},
+      {"internalType": "string", "name": "", "type": "string"},
+      {"internalType": "uint256", "name": "", "type": "uint256"},
+      {"internalType": "address", "name": "", "type": "address"}
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "uint256", "name": "contract_id", "type": "uint256"}],
+    "name": "refund",
+    "outputs": [
+      {"internalType": "uint256", "name": "", "type": "uint256"},
+      {"internalType": "uint256", "name": "", "type": "uint256"},
+      {"internalType": "uint256", "name": "", "type": "uint256"}
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "uint256", "name": "contract_id", "type": "uint256"}],
+    "name": "refundOwnerCancel",
+    "outputs": [
+      {"internalType": "uint256", "name": "", "type": "uint256"},
+      {"internalType": "uint256", "name": "", "type": "uint256"}
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "uint256", "name": "contract_id", "type": "uint256"},
+      {"internalType": "address", "name": "renter_address", "type": "address"},
+      {"internalType": "uint256", "name": "amount", "type": "uint256"}
+    ],
+    "name": "refundOwnerReject",
+    "outputs": [
+      {"internalType": "uint256", "name": "", "type": "uint256"},
+      {"internalType": "uint256", "name": "", "type": "uint256"}
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "uint256", "name": "contract_id", "type": "uint256"}],
+    "name": "refundRenterCancel",
+    "outputs": [
+      {"internalType": "uint256", "name": "", "type": "uint256"},
+      {"internalType": "uint256", "name": "", "type": "uint256"},
+      {"internalType": "uint256", "name": "", "type": "uint256"}
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "refund_rate",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "bytes32", "name": "role", "type": "bytes32"},
+      {"internalType": "address", "name": "account", "type": "address"}
+    ],
+    "name": "renounceRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "bytes32", "name": "role", "type": "bytes32"},
+      {"internalType": "address", "name": "account", "type": "address"}
+    ],
+    "name": "revokeRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "uint256", "name": "rate", "type": "uint256"}],
+    "name": "setRefundRate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "uint256", "name": "contract_id", "type": "uint256"}],
+    "name": "startContract",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "bytes4", "name": "interfaceId", "type": "bytes4"}],
+    "name": "supportsInterface",
+    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "address", "name": "newOwner", "type": "address"}],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "withdrawAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
