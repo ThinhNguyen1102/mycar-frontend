@@ -2,13 +2,15 @@ import {Box, Button, Divider, HStack, Icon, Stack, Text, VStack} from '@chakra-u
 import {CiCalendarDate} from 'react-icons/ci'
 import {IoLocationOutline} from 'react-icons/io5'
 import {MdOutlineKeyboardArrowDown} from 'react-icons/md'
+import {Address} from '../../../../types/common.type'
 
 interface SelectAddressAndDateProps {
   onOpenAddress: () => void
   onOpenDate: () => void
+  address: Address | undefined
 }
 
-function SelectAddressAndDate({onOpenDate, onOpenAddress}: SelectAddressAndDateProps) {
+function SelectAddressAndDate({onOpenDate, onOpenAddress, address}: SelectAddressAndDateProps) {
   return (
     <Stack
       w={{base: '95%', xl: '80%'}}
@@ -35,8 +37,10 @@ function SelectAddressAndDate({onOpenDate, onOpenAddress}: SelectAddressAndDateP
           justifyContent="space-between"
           onClick={onOpenAddress}
         >
-          <Text fontSize="20px" fontWeight="bold">
-            Hà Nội
+          <Text fontSize="16px" fontWeight="bold" textAlign="left">
+            {address?.prefecture_name && address?.district_name
+              ? `${address.district_name}, ${address.prefecture_name}`
+              : 'Chọn địa điểm'}
           </Text>
           <Box fontSize="20px" pt="7px">
             <Icon as={MdOutlineKeyboardArrowDown} />

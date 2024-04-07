@@ -6,6 +6,7 @@ import {useState} from 'react'
 import {DateRange} from 'react-day-picker'
 import {vi} from 'date-fns/locale'
 import AddressSelectModel from '../../../Home/components/AddressSelectModal'
+import {Address} from '../../../../types/common.type'
 
 interface PostDetailCostProps {
   carRentalPost: CarRentalPost | undefined
@@ -15,8 +16,7 @@ function PostDetailCost({carRentalPost}: PostDetailCostProps) {
   const {isOpen: isOpenDate, onOpen: onOpenDate, onClose: onCloseDate} = useDisclosure()
   const {isOpen: isOpenAddress, onOpen: onOpenAddress, onClose: onCloseAddress} = useDisclosure()
   const [range, setRange] = useState<DateRange | undefined>()
-
-  console.log(range)
+  const [address, setAddress] = useState<Address>()
 
   return (
     <VStack mt="20px" alignSelf="flex-start" flex="2" justifyContent="flex-start">
@@ -120,7 +120,12 @@ function PostDetailCost({carRentalPost}: PostDetailCostProps) {
         range={range}
         setRange={setRange}
       />
-      <AddressSelectModel isOpen={isOpenAddress} onClose={onCloseAddress} />
+      <AddressSelectModel
+        isOpen={isOpenAddress}
+        onClose={onCloseAddress}
+        address={address}
+        setAddress={setAddress}
+      />
     </VStack>
   )
 }

@@ -44,7 +44,7 @@ function CarRentalPostItem({carRentalPost}: CarRentalPostItemProps) {
           <Box pt="5px">
             <Icon as={TbManualGearbox} />
           </Box>
-          <Text color="text.gray">
+          <Text color="text.gray" fontSize="13px">
             {carRentalPost?.transmission === 'auto' ? 'Số tự động' : 'Số sàn'}
           </Text>
         </HStack>
@@ -65,7 +65,7 @@ function CarRentalPostItem({carRentalPost}: CarRentalPostItemProps) {
           <Box pt="5px">
             <Icon as={IoLocationOutline} />
           </Box>
-          <Text color="text.gray" display="inline">
+          <Text fontSize="13px" color="text.gray" display="inline">
             {carRentalPost?.carRentalPostAddress.district_name +
               ', ' +
               carRentalPost?.carRentalPostAddress.prefecture_name}

@@ -10,12 +10,14 @@ import useUserLoginInfoStore from '../../hooks/user-login-info.store'
 import {CarRentalPost} from '../../types/api-response.type'
 import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 import {DateRange} from 'react-day-picker'
+import {Address} from '../../types/common.type'
 
 function Home() {
   const navigate = useNavigate()
   const {isOpen: isOpenAddress, onOpen: onOpenAddress, onClose: onCloseAddress} = useDisclosure()
   const {isOpen: isOpenDate, onOpen: onOpenDate, onClose: onCloseDate} = useDisclosure()
   const [range, setRange] = useState<DateRange | undefined>()
+  const [address, setAddress] = useState<Address>()
 
   const setToken = useUserLoginInfoStore(state => state.setToken)
   const setUserInfo = useUserLoginInfoStore(state => state.setUserInfo)
@@ -58,7 +60,11 @@ function Home() {
         <img width="100%" src="/car-banner.jpg" alt="banner" />
         <Box bg="rgba(0, 0, 0, 0.3)" position="absolute" top="0" bottom="0" right="0" left="0" />
       </Box>
-      <SelectAddressAndDate onOpenAddress={onOpenAddress} onOpenDate={onOpenDate} />
+      <SelectAddressAndDate
+        address={address}
+        onOpenAddress={onOpenAddress}
+        onOpenDate={onOpenDate}
+      />
       <SimpleGrid
         minChildWidth={{md: '38vw', lg: '24vw', xl: '28vw', '2xl': '20vw'}}
         spacing={4}
@@ -68,7 +74,12 @@ function Home() {
           <CarRentalPostItem key={index} carRentalPost={carRentalPost} />
         ))}
       </SimpleGrid>
-      <AddressSelectModel isOpen={isOpenAddress} onClose={onCloseAddress} />
+      <AddressSelectModel
+        isOpen={isOpenAddress}
+        onClose={onCloseAddress}
+        address={address}
+        setAddress={setAddress}
+      />
       <DateSelectModal
         isOpen={isOpenDate}
         onClose={onCloseDate}

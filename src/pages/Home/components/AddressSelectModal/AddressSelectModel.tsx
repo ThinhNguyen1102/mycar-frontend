@@ -11,13 +11,31 @@ import {
   ModalOverlay,
   Select
 } from '@chakra-ui/react'
+import React, {useEffect} from 'react'
+import {Address, DistrictAPIdata, ProvinceAPIdata} from '../../../../types/common.type'
+import axios from 'axios'
 
 interface AddressModelProps {
   isOpen: boolean
   onClose: () => void
+  address: Address | undefined
+  setAddress: React.Dispatch<React.SetStateAction<Address | undefined>>
 }
 
-function AddressSelectModel({isOpen, onClose}: AddressModelProps) {
+function AddressSelectModel({isOpen, onClose, address, setAddress}: AddressModelProps) {
+  const [provinces, setProvinces] = React.useState<ProvinceAPIdata[]>([])
+  const [districts, setDistricts] = React.useState<DistrictAPIdata[]>([])
+
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      const {data: response} = await axios.get('https://vapi.vnappmob.com/api/province')
+
+      setProvinces(response.results)
+    }
+
+    fetchProvinces()
+  }, [])
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -32,10 +50,40 @@ function AddressSelectModel({isOpen, onClose}: AddressModelProps) {
               _focusVisible={{
                 boxShadow: 'none'
               }}
+              onChange={async e => {
+                const province_id = e.target.value
+                setAddress(prev => {
+                  return {
+                    district_name: '',
+                    prefecture_name: provinces.find(
+                      province => province.province_id === province_id
+                    )?.province_name
+                  } as Address
+                })
+
+                if (province_id) {
+                  const {data: response} = await axios.get(
+                    `https://vapi.vnappmob.com/api/province/district/${province_id}`
+                  )
+                  setDistricts(
+                    response.results.map((districy: any) => {
+                      return {
+                        district_name: districy.district_name,
+                        district_id: districy.district_id,
+                        province_id: districy.province_id,
+                        district_type: districy.district_type
+                      }
+                    })
+                  )
+                }
+              }}
+              placeContent={address?.prefecture_name ?? '...'}
             >
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
+              {provinces.map(province => (
+                <option key={province.province_id} value={province.province_id}>
+                  {province.province_name}
+                </option>
+              ))}
             </Select>
           </FormControl>
 
@@ -46,10 +94,23 @@ function AddressSelectModel({isOpen, onClose}: AddressModelProps) {
               _focusVisible={{
                 boxShadow: 'none'
               }}
+              onChange={e => {
+                setAddress(prev => {
+                  return {
+                    ...prev,
+                    district_name: districts.find(
+                      (district: DistrictAPIdata) => district.district_id === e.target.value
+                    )?.district_name
+                  } as Address
+                })
+              }}
+              placeContent={address?.prefecture_name ?? '...'}
             >
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
+              {districts.map(district => (
+                <option key={district.district_id} value={district.district_id}>
+                  {district.district_name}
+                </option>
+              ))}
             </Select>
           </FormControl>
         </ModalBody>
