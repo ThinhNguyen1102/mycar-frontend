@@ -5,8 +5,6 @@ import DateSelectModal from '../../../Home/components/DateSelectModal'
 import {useState} from 'react'
 import {DateRange} from 'react-day-picker'
 import {vi} from 'date-fns/locale'
-import AddressSelectModel from '../../../Home/components/AddressSelectModal'
-import {Address} from '../../../../types/common.type'
 
 interface PostDetailCostProps {
   carRentalPost: CarRentalPost | undefined
@@ -14,9 +12,7 @@ interface PostDetailCostProps {
 
 function PostDetailCost({carRentalPost}: PostDetailCostProps) {
   const {isOpen: isOpenDate, onOpen: onOpenDate, onClose: onCloseDate} = useDisclosure()
-  const {isOpen: isOpenAddress, onOpen: onOpenAddress, onClose: onCloseAddress} = useDisclosure()
   const [range, setRange] = useState<DateRange | undefined>()
-  const [address, setAddress] = useState<Address>()
 
   return (
     <VStack mt="20px" alignSelf="flex-start" flex="2" justifyContent="flex-start">
@@ -69,13 +65,16 @@ function PostDetailCost({carRentalPost}: PostDetailCostProps) {
           borderRadius="10px"
           gap="10px"
           alignItems="flex-start"
-          as="button"
-          onClick={onOpenAddress}
         >
           <Text fontSize="12px" color="text.gray">
             Địa điểm giao nhận xe
           </Text>
-          <Text>Cầu Giấy, Hà Nội</Text>
+          <Text>
+            {carRentalPost?.carRentalPostAddress.prefecture_name &&
+            carRentalPost?.carRentalPostAddress.district_name
+              ? `${carRentalPost?.carRentalPostAddress.district_name}, ${carRentalPost?.carRentalPostAddress.prefecture_name}`
+              : 'Chọn địa điểm'}
+          </Text>
         </VStack>
         <Divider w="100%" />
         <VStack w="100%">
@@ -119,12 +118,6 @@ function PostDetailCost({carRentalPost}: PostDetailCostProps) {
         onClose={onCloseDate}
         range={range}
         setRange={setRange}
-      />
-      <AddressSelectModel
-        isOpen={isOpenAddress}
-        onClose={onCloseAddress}
-        address={address}
-        setAddress={setAddress}
       />
     </VStack>
   )

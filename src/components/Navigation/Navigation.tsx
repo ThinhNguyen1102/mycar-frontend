@@ -1,12 +1,50 @@
 import {Avatar, Box, Divider, HStack, Icon, Text} from '@chakra-ui/react'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {IoMdNotificationsOutline} from 'react-icons/io'
 import {MdOutlineKeyboardArrowDown} from 'react-icons/md'
 import ConnectWallet from './ConnectWallet'
 import useUserLoginInfoStore from '../../hooks/user-login-info.store'
+import {useEffect} from 'react'
+import useCarRentalPostStore from '../../hooks/car-rental-post.store'
+import callApi from '../../utils/api'
+import {CarRentalPost} from '../../types/api-response.type'
 
 function Navigation() {
   const userInfo = useUserLoginInfoStore(state => state.userInfo)
+  const navigate = useNavigate()
+  const setToken = useUserLoginInfoStore(state => state.setToken)
+  const setUserInfo = useUserLoginInfoStore(state => state.setUserInfo)
+  const setCarRentalPost = useCarRentalPostStore(state => state.setCarRentalPosts)
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem('access_token')
+    const refreshToken = localStorage.getItem('refresh_token')
+    if (!accessToken && !refreshToken) {
+      navigate('/login')
+      return
+    }
+
+    const handleInitApp = async () => {
+      const {data: profileRes} = await callApi(`/api/v1/users/profile`, 'GET', null)
+      const {data: carRentalPost}: {data: CarRentalPost[]} = await callApi(
+        `/api/v1/car-rental-posts`,
+        'GET',
+        null
+      )
+
+      setCarRentalPost(carRentalPost)
+      setToken(accessToken ?? '', refreshToken ?? '')
+      setUserInfo({
+        id: profileRes.id,
+        email: profileRes.email,
+        username: profileRes.username,
+        phoneNumber: profileRes.phone_number
+      })
+    }
+
+    handleInitApp()
+  }, [navigate, setCarRentalPost, setToken, setUserInfo])
+
   return (
     <HStack
       h="80px"

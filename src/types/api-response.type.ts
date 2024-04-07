@@ -9,6 +9,8 @@ export type CarRentalPost = {
   model: string
   seats: number
   fuel: string
+  consumption: number
+  year: number
   description: string
   transmission: string
   brand: string

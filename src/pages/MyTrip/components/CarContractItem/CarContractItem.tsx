@@ -40,7 +40,7 @@ function CarContractItem() {
         </Text>
       </VStack>
       <Spacer />
-      <VStack height="100%">
+      <VStack height="100%" alignItems="flex-end">
         <Tag bg="#f9ca24" color="white">
           Chờ xác nhận
         </Tag>

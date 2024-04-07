@@ -3,12 +3,17 @@ import {useParams} from 'react-router-dom'
 import PostDetailInfo from './components/PostDetailInfo'
 import PostDetailCost from './components/PostDetailCost'
 import useCarRentalPostStore from '../../hooks/car-rental-post.store'
+import {useEffect} from 'react'
 
 function CarRentalPostDetail() {
   const {postId} = useParams()
 
   const carRentalPosts = useCarRentalPostStore(state => state.carRentalPosts)
   const post = carRentalPosts.find(post => post.id === Number(postId))
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <VStack p="80px 0" w="calc(100vw - 10px)" bg="background">

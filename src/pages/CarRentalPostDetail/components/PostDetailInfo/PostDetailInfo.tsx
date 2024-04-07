@@ -8,27 +8,6 @@ import {PiArmchairBold, PiGasCanBold} from 'react-icons/pi'
 import {TbManualGearbox} from 'react-icons/tb'
 import {CarRentalPost} from '../../../../types/api-response.type'
 
-const fixFeatures = [
-  'Bản đồ',
-  'Bluetooth',
-  'Camrea 360',
-  'Camera cập lề',
-  'Camera hành trình',
-  'Camera lùi',
-  'Cảm biến lốp',
-  'Cảm biến va chạm',
-  'Cảnh báo tốc độ',
-  'Cửa sổ trời',
-  'Định vị GPS',
-  'Ghế trẻ em',
-  'Khe cắm USB',
-  'Lốp dự phòng',
-  'Màn hình DVD',
-  'Nắp thùng xe bán tải',
-  'ETC',
-  'Túi khí an toàn'
-]
-
 interface PostDetailInfoProps {
   carRentalPost: CarRentalPost | undefined
 }
@@ -85,7 +64,6 @@ function PostDetailInfo({carRentalPost}: PostDetailInfoProps) {
                 Truyền động
               </Text>
               <Text fontWeight="500">
-                {' '}
                 {carRentalPost?.transmission === 'auto' ? 'Số tự động' : 'Số sàn'}
               </Text>
             </VStack>
@@ -103,15 +81,17 @@ function PostDetailInfo({carRentalPost}: PostDetailInfoProps) {
               </Text>
             </VStack>
           </HStack>
-          <HStack gap="15px" p="0 10px" h="100px" minW="150px" borderRadius="10px">
-            <Icon fontSize="28px" as={MdOutlineGasMeter} />
-            <VStack alignItems="flex-start">
-              <Text fontSize="12px" color="text.gray">
-                NL tiêu hao
-              </Text>
-              <Text fontWeight="500">7 lít/100km</Text>
-            </VStack>
-          </HStack>
+          {carRentalPost?.fuel !== 'electric' && (
+            <HStack gap="15px" p="0 10px" h="100px" minW="150px" borderRadius="10px">
+              <Icon fontSize="28px" as={MdOutlineGasMeter} />
+              <VStack alignItems="flex-start">
+                <Text fontSize="12px" color="text.gray">
+                  NL tiêu hao
+                </Text>
+                <Text fontWeight="500">{carRentalPost?.consumption} lít/100km</Text>
+              </VStack>
+            </HStack>
+          )}
         </HStack>
       </VStack>
       <Divider w="100%" />
@@ -119,10 +99,7 @@ function PostDetailInfo({carRentalPost}: PostDetailInfoProps) {
         <Text fontWeight="500" fontSize="20px">
           Mô tả
         </Text>
-        <Text color="text.gray">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet.
-          Proin gravida dolor sit amet lacus
-        </Text>
+        <Text color="text.gray">{carRentalPost?.description}</Text>
       </VStack>
       <Divider w="100%" />
       <VStack w="100%" alignItems="flex-start">
