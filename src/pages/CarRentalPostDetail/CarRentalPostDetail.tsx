@@ -2,10 +2,14 @@ import {Grid, GridItem, HStack, VStack} from '@chakra-ui/react'
 import {useParams} from 'react-router-dom'
 import PostDetailInfo from './components/PostDetailInfo'
 import PostDetailCost from './components/PostDetailCost'
+import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 
 function CarRentalPostDetail() {
   const {postId} = useParams()
-  console.log(postId)
+
+  const carRentalPosts = useCarRentalPostStore(state => state.carRentalPosts)
+  const post = carRentalPosts.find(post => post.id === Number(postId))
+
   return (
     <VStack p="80px 0" w="calc(100vw - 10px)" bg="background">
       <Grid
@@ -21,8 +25,8 @@ function CarRentalPostDetail() {
         <GridItem colSpan={2} bg="tomato" />
       </Grid>
       <HStack w="80%" gap="10px">
-        <PostDetailInfo />
-        <PostDetailCost />
+        <PostDetailInfo carRentalPost={post} />
+        <PostDetailCost carRentalPost={post} />
       </HStack>
     </VStack>
   )

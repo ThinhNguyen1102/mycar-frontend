@@ -6,6 +6,7 @@ import {IoLocationOutline} from 'react-icons/io5'
 import {MdOutlineGasMeter} from 'react-icons/md'
 import {PiArmchairBold, PiGasCanBold} from 'react-icons/pi'
 import {TbManualGearbox} from 'react-icons/tb'
+import {CarRentalPost} from '../../../../types/api-response.type'
 
 const fixFeatures = [
   'Bản đồ',
@@ -28,16 +29,20 @@ const fixFeatures = [
   'Túi khí an toàn'
 ]
 
-function PostDetailInfo() {
+interface PostDetailInfoProps {
+  carRentalPost: CarRentalPost | undefined
+}
+
+function PostDetailInfo({carRentalPost}: PostDetailInfoProps) {
   return (
     <VStack p="20px" borderRadius="10px" mt="20px" bg="white" flex="4" w="100%" gap="20px">
       <VStack w="100%" alignItems="flex-start">
-        <Heading>TOYOTA VELOZ CROSS 2022</Heading>
+        <Heading>{carRentalPost?.brand + ' - ' + carRentalPost?.model}</Heading>
         <HStack w="100%" gap="15px">
           <HStack>
             <Icon as={FaRegStar} />
             <Text color="text.gray" display="inline">
-              4
+              {carRentalPost?.seats}
             </Text>
           </HStack>
           <HStack>
@@ -51,7 +56,9 @@ function PostDetailInfo() {
               <Icon as={IoLocationOutline} />
             </Box>
             <Text color="text.gray" display="inline">
-              Cầu Giấy, Hà Nội
+              {carRentalPost?.carRentalPostAddress.district_name +
+                ', ' +
+                carRentalPost?.carRentalPostAddress.prefecture_name}
             </Text>
           </HStack>
         </HStack>
@@ -68,7 +75,7 @@ function PostDetailInfo() {
               <Text fontSize="12px" color="text.gray">
                 Số ghế
               </Text>
-              <Text fontWeight="500">4 chỗ</Text>
+              <Text fontWeight="500">{carRentalPost?.seats} chỗ</Text>
             </VStack>
           </HStack>
           <HStack gap="15px" p="0 10px" h="100px" minW="150px" borderRadius="10px">
@@ -77,7 +84,10 @@ function PostDetailInfo() {
               <Text fontSize="12px" color="text.gray">
                 Truyền động
               </Text>
-              <Text fontWeight="500">Số tự động</Text>
+              <Text fontWeight="500">
+                {' '}
+                {carRentalPost?.transmission === 'auto' ? 'Số tự động' : 'Số sàn'}
+              </Text>
             </VStack>
           </HStack>
           <HStack gap="15px" p="0 10px" h="100px" minW="150px" borderRadius="10px">
@@ -86,7 +96,11 @@ function PostDetailInfo() {
               <Text fontSize="12px" color="text.gray">
                 Nhiên liệu
               </Text>
-              <Text fontWeight="500">Xăng</Text>
+              <Text fontWeight="500">
+                {carRentalPost?.fuel === 'electric' && 'Điện'}
+                {carRentalPost?.fuel === 'gasoline' && 'Xăng'}
+                {carRentalPost?.fuel === 'diesel' && 'Dầu diesel'}
+              </Text>
             </VStack>
           </HStack>
           <HStack gap="15px" p="0 10px" h="100px" minW="150px" borderRadius="10px">
@@ -116,7 +130,7 @@ function PostDetailInfo() {
           Các tiện nghi khác
         </Text>
         <SimpleGrid w="100%" minChildWidth="25%" gap="10px">
-          {fixFeatures.map((item, index) => (
+          {carRentalPost?.carRentalPostFeatures.map((item, index) => (
             <HStack gap="10px" p="10px" borderRadius="5px" key={index}>
               <Icon color="text.gray" fontSize="24px" as={BiCategory} />
               <Text color="text.gray">{item}</Text>

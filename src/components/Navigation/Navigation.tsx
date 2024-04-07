@@ -3,8 +3,10 @@ import {Link} from 'react-router-dom'
 import {IoMdNotificationsOutline} from 'react-icons/io'
 import {MdOutlineKeyboardArrowDown} from 'react-icons/md'
 import ConnectWallet from './ConnectWallet'
+import useUserLoginInfoStore from '../../hooks/user-login-info.store'
 
 function Navigation() {
+  const userInfo = useUserLoginInfoStore(state => state.userInfo)
   return (
     <HStack
       h="80px"
@@ -35,7 +37,7 @@ function Navigation() {
         </Box>
         <HStack as="button">
           <Avatar size="sm" />
-          <Text fontWeight="500">Thịnh nguyễn</Text>
+          <Text fontWeight="500">{userInfo?.username}</Text>
           <Box fontSize="20px" pt="7px">
             <Icon as={MdOutlineKeyboardArrowDown} />
           </Box>

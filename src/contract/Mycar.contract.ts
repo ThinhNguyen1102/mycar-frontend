@@ -3,12 +3,14 @@ import BaseSmartContract from './interfaces/BaseSmartContact'
 import MycarAbi from './abis/mycar-abi.json'
 // import * as dotenv from 'dotenv'
 import {CarContractSM} from '../types/contract.type'
+import {appConfig} from '../configs/app.config'
 // dotenv.config({
 //   path: path.resolve(__dirname, '..', '..', '.env')
 // })
 
 export default class MycarContract extends BaseSmartContract {
   constructor(provider?: ethers.providers.Web3Provider) {
+    console.log(appConfig)
     const rpcProvider = new ethers.providers.JsonRpcProvider(
       'https://sepolia.infura.io/v3/b67ddc0d216347899bedfba2b1e50a35'
     )

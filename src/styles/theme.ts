@@ -9,7 +9,8 @@ export const theme = extendTheme(
       text: {
         dark: '#1D1D1F',
         gray: '#6e6e73',
-        light: '#ffffff'
+        light: '#ffffff',
+        error: '#ff4d4d'
       },
       background: '#F5F5F7'
     },

@@ -11,7 +11,7 @@ import {
   ModalOverlay,
   Text
 } from '@chakra-ui/react'
-import {useState} from 'react'
+import React from 'react'
 import {DateRange, DayPicker} from 'react-day-picker'
 import 'react-day-picker/dist/style.css'
 import {format} from 'date-fns'
@@ -20,11 +20,11 @@ import {vi} from 'date-fns/locale'
 interface DateSelectModalProps {
   isOpen: boolean
   onClose: () => void
+  range?: DateRange | undefined
+  setRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>
 }
 
-function DateSelectModal({isOpen, onClose}: DateSelectModalProps) {
-  const [range, setRange] = useState<DateRange | undefined>()
-
+function DateSelectModal({isOpen, onClose, range, setRange}: DateSelectModalProps) {
   let footer = 'Please pick the first day.'
   if (range?.from) {
     if (!range.to) {
