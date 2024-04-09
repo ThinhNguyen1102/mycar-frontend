@@ -1,8 +1,13 @@
 import {Heading, Tab, TabList, TabPanel, TabPanels, Tabs, VStack} from '@chakra-ui/react'
 import CarContractItem from './components/CarContractItem'
 import {useEffect} from 'react'
+import useCarContractStore from '../../hooks/car-contract.store'
+import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 
 function MyTrip() {
+  const carContracts = useCarContractStore(state => state.carContracts)
+  const carRentalPosts = useCarRentalPostStore(state => state.carRentalPosts)
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
@@ -18,9 +23,16 @@ function MyTrip() {
         <TabPanels>
           <TabPanel>
             <VStack>
-              <CarContractItem />
-              <CarContractItem />
-              <CarContractItem />
+              {carContracts.length > 0 &&
+                carContracts.map(carContract => (
+                  <CarContractItem
+                    key={carContract.id}
+                    carContract={carContract}
+                    carRentalPost={
+                      carRentalPosts.find(post => post.id === carContract.post_id) ?? null
+                    }
+                  />
+                ))}
             </VStack>
           </TabPanel>
           <TabPanel>

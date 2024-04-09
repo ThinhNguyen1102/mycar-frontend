@@ -8,6 +8,7 @@ import {useEffect} from 'react'
 import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 import callApi from '../../utils/api'
 import {CarRentalPost} from '../../types/api-response.type'
+import useCarContractStore from '../../hooks/car-contract.store'
 
 function Navigation() {
   const userInfo = useUserLoginInfoStore(state => state.userInfo)
@@ -15,6 +16,7 @@ function Navigation() {
   const setToken = useUserLoginInfoStore(state => state.setToken)
   const setUserInfo = useUserLoginInfoStore(state => state.setUserInfo)
   const setCarRentalPost = useCarRentalPostStore(state => state.setCarRentalPosts)
+  const setCarContracts = useCarContractStore(state => state.setCarContracts)
 
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token')
@@ -26,13 +28,15 @@ function Navigation() {
 
     const handleInitApp = async () => {
       const {data: profileRes} = await callApi(`/api/v1/users/profile`, 'GET', null)
-      const {data: carRentalPost}: {data: CarRentalPost[]} = await callApi(
+      const {data: carRentalPosts}: {data: CarRentalPost[]} = await callApi(
         `/api/v1/car-rental-posts`,
         'GET',
         null
       )
+      const {data: carContracts} = await callApi(`/api/v1/car-contracts`, 'GET', null)
 
-      setCarRentalPost(carRentalPost)
+      setCarContracts(carContracts)
+      setCarRentalPost(carRentalPosts)
       setToken(accessToken ?? '', refreshToken ?? '')
       setUserInfo({
         id: profileRes.id,
@@ -43,7 +47,7 @@ function Navigation() {
     }
 
     handleInitApp()
-  }, [navigate, setCarRentalPost, setToken, setUserInfo])
+  }, [navigate, setCarContracts, setCarRentalPost, setToken, setUserInfo])
 
   return (
     <HStack

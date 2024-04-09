@@ -24,6 +24,7 @@ function MyCarRentalPosts({
         {carRentalPosts.map(carRentalPost => {
           return (
             <HStack
+              key={carRentalPost.id}
               bg={carRentalPost.id === currentEditPost?.id ? 'background' : 'white'}
               as="button"
               w="100%"

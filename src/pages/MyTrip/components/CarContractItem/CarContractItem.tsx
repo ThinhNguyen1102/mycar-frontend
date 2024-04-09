@@ -1,7 +1,25 @@
-import {Box, HStack, Spacer, Tag, Text, useDisclosure, VStack} from '@chakra-ui/react'
+import {
+  Box,
+  HStack,
+  Spacer,
+  SystemStyleObject,
+  Tag,
+  Text,
+  useDisclosure,
+  VStack
+} from '@chakra-ui/react'
 import CarContractDetail from '../CarContractDetail'
+import {CarContract, CarRentalPost} from '../../../../types/api-response.type'
+import {format} from 'date-fns'
+import {vi} from 'date-fns/locale'
+import {CarContractStatus} from '../../../../enums/common.enum'
 
-function CarContractItem() {
+interface CarContractItemProps {
+  carContract: CarContract
+  carRentalPost: CarRentalPost | null
+}
+
+function CarContractItem({carContract, carRentalPost}: CarContractItemProps) {
   const {isOpen, onOpen, onClose} = useDisclosure()
   return (
     <HStack
@@ -12,7 +30,8 @@ function CarContractItem() {
       w="100%"
       p="15px"
       _hover={{
-        boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.1)',
+        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;',
+        bg: 'background',
         cursor: 'pointer'
       }}
       onClick={onOpen}
@@ -24,34 +43,78 @@ function CarContractItem() {
         />
       </Box>
       <VStack gap="0" alignItems="flex-start" height="100%">
-        <Text fontWeight="500">Toyota Yaris</Text>
+        <Text fontWeight="500">{carRentalPost?.brand + ' - ' + carRentalPost?.model}</Text>
         <Text fontSize="12px" color="text.gray">
-          30Z-123.45
+          {carRentalPost?.license_plate}
         </Text>
         <Text fontSize="12px" color="text.gray">
-          Chủ xe: Nguyễn Văn A
+          Chủ xe: {carContract.owner.username}
         </Text>
         <Spacer />
         <Text fontSize="12px" color="text.gray">
-          10:00 20/10/2021 - 10:00 21/10/2021
+          {format(carContract.start_date, 'hh:mm dd/MM/yyyy')} -{' '}
+          {format(carContract.end_date, 'hh:mm dd/MM/yyyy')}
         </Text>
         <Text fontSize="12px" color="text.gray">
-          Cầu Giấy, Hà Nội
+          {carRentalPost?.carRentalPostAddress.district_name},{' '}
+          {carRentalPost?.carRentalPostAddress.prefecture_name}
         </Text>
       </VStack>
       <Spacer />
       <VStack height="100%" alignItems="flex-end">
-        <Tag bg="#f9ca24" color="white">
-          Chờ xác nhận
-        </Tag>
+        {carContract.contract_status === CarContractStatus.WAITING_APPROVAL && (
+          <Tag bg="#ffd43b" sx={styles.status_tag}>
+            Chờ xác nhận
+          </Tag>
+        )}
+        {carContract.contract_status === CarContractStatus.REJECTED && (
+          <Tag bg="#f03e3e" sx={styles.status_tag}>
+            Đã từ chối
+          </Tag>
+        )}
+        {carContract.contract_status === CarContractStatus.APPROVED && (
+          <Tag bg="#228be6" sx={styles.status_tag}>
+            Đã xác nhận
+          </Tag>
+        )}
+        {carContract.contract_status === CarContractStatus.ENDED && (
+          <Tag bg="#40c057" sx={styles.status_tag}>
+            Đã kết thúc
+          </Tag>
+        )}
+        {carContract.contract_status === CarContractStatus.CANCELED && (
+          <Tag bg="#f03e3e" sx={styles.status_tag}>
+            Đã hủy
+          </Tag>
+        )}
         <Spacer />
         <Text fontWeight="500" fontSize="20px" color="text.dark">
-          0.05 ETH/ngày
+          {carContract.price_per_day} ETH/ngày
         </Text>
       </VStack>
-      <CarContractDetail isOpen={isOpen} onClose={onClose} />
+      <CarContractDetail
+        isOpen={isOpen}
+        onClose={onClose}
+        carContract={carContract}
+        carRentalPost={carRentalPost}
+      />
     </HStack>
   )
+}
+
+type Styles = {
+  status_tag: SystemStyleObject
+}
+
+const styles: Styles = {
+  status_tag: {
+    color: 'white',
+    minW: '100px',
+    fontSize: '12px',
+    fontWeight: 'bold',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 }
 
 export default CarContractItem
