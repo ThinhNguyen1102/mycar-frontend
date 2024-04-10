@@ -34,7 +34,7 @@ function Login() {
 
   const onSubmit: SubmitHandler<LoginInputs> = async data => {
     try {
-      const {data: response} = await callApi('/api/v1/auth/login', 'POST', data)
+      const {data: response} = await callApi<any>('/api/v1/auth/login', 'POST', data)
       localStorage.setItem('access_token', response.data.access_token)
       localStorage.setItem('refresh_token', response.data.refresh_token)
       localStorage.setItem('user_id', response.data.user.id)

@@ -2,15 +2,14 @@ import {ethers} from 'ethers'
 import BaseSmartContract from './interfaces/BaseSmartContact'
 import MycarAbi from './abis/mycar-abi.json'
 // import * as dotenv from 'dotenv'
-import {CarContractSM} from '../types/contract.type'
-import {appConfig} from '../configs/app.config'
+import {CarContractSM, PayPayloadSM} from '../types/contract.type'
+import {TransactionResponse} from '@ethersproject/abstract-provider'
 // dotenv.config({
 //   path: path.resolve(__dirname, '..', '..', '.env')
 // })
 
 export default class MycarContract extends BaseSmartContract {
   constructor(provider?: ethers.providers.Web3Provider) {
-    console.log(appConfig)
     const rpcProvider = new ethers.providers.JsonRpcProvider(
       'https://sepolia.infura.io/v3/b67ddc0d216347899bedfba2b1e50a35'
     )
@@ -18,6 +17,23 @@ export default class MycarContract extends BaseSmartContract {
     super(provider || rpcProvider, '0x708856Cb21c203f5D849073F39E4d36741925559', MycarAbi)
     if (!provider) {
       this._contract = new ethers.Contract(this._contractAddress, this._abis, rpcProvider)
+    }
+  }
+
+  async pay(payload: PayPayloadSM) {
+    try {
+      const tx = await this._contract.functions.pay(
+        payload.contract_id,
+        payload.email,
+        this._toWei(payload.amount),
+        {
+          value: this._numberToEth(payload.amount)
+        }
+      )
+
+      return this._handleTransactionResponse(tx)
+    } catch (e) {
+      console.log(e)
     }
   }
 

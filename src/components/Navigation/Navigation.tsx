@@ -7,7 +7,7 @@ import useUserLoginInfoStore from '../../hooks/user-login-info.store'
 import {useEffect} from 'react'
 import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 import callApi from '../../utils/api'
-import {CarRentalPost} from '../../types/api-response.type'
+import {CarContract, CarRentalPost} from '../../types/api-response.type'
 import useCarContractStore from '../../hooks/car-contract.store'
 
 function Navigation() {
@@ -27,13 +27,17 @@ function Navigation() {
     }
 
     const handleInitApp = async () => {
-      const {data: profileRes} = await callApi(`/api/v1/users/profile`, 'GET', null)
-      const {data: carRentalPosts}: {data: CarRentalPost[]} = await callApi(
+      const {data: profileRes} = await callApi<any>(`/api/v1/users/profile`, 'GET', null)
+      const {data: carRentalPosts}: {data: CarRentalPost[]} = await callApi<any>(
         `/api/v1/car-rental-posts`,
         'GET',
         null
       )
-      const {data: carContracts} = await callApi(`/api/v1/car-contracts`, 'GET', null)
+      const {data: carContracts} = await callApi<CarContract[]>(
+        `/api/v1/car-contracts`,
+        'GET',
+        null
+      )
 
       setCarContracts(carContracts)
       setCarRentalPost(carRentalPosts)

@@ -116,7 +116,7 @@ function CarRentalPostForm({currentEditPost, setCurrentEditPost}: CarRentalPostF
     }
     try {
       if (currentEditPost) {
-        const {data: response} = await callApi(
+        const {data: response} = await callApi<any>(
           `/api/v1/car-rental-posts/${currentEditPost.id}`,
           'PUT',
           formatData
@@ -126,7 +126,7 @@ function CarRentalPostForm({currentEditPost, setCurrentEditPost}: CarRentalPostF
           setCurrentEditPost(null)
         }
       } else {
-        const {data: response} = await callApi('/api/v1/car-rental-posts', 'POST', formatData)
+        const {data: response} = await callApi<any>('/api/v1/car-rental-posts', 'POST', formatData)
         if (response) {
           console.log('create post ok')
         }

@@ -1,5 +1,11 @@
 import {CarContractStatus} from '../enums/common.enum'
 
+export type PayPayloadSM = {
+  contract_id: number
+  amount: number
+  email: string
+}
+
 export type CarContractSM = {
   contract_id: number
   owner_email: string

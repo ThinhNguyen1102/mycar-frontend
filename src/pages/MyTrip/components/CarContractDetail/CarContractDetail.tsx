@@ -156,7 +156,7 @@ function CarContractDetail({isOpen, onClose, carContract, carRentalPost}: CarCon
             <Accordion allowMultiple w="100%" h="100%">
               {carContract.contractTxHistories.map(tx => {
                 return (
-                  <AccordionItem borderColor="white">
+                  <AccordionItem key={tx.tx_hash} borderColor="white">
                     <h2>
                       <AccordionButton pl="0">
                         <Box as="span" flex="1" textAlign="left">

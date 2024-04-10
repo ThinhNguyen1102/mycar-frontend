@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export const BASEURL = 'http://localhost:1102'
 
-export default function callApi(
+export default function callApi<T>(
   endpoint: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH',
   body: any
@@ -77,7 +77,7 @@ export default function callApi(
     }
   )
 
-  return instance.request({
+  return instance.request<T>({
     method: method,
     url: `${BASEURL}${endpoint}`,
     data: body,
