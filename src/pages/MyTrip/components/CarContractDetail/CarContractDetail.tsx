@@ -46,12 +46,12 @@ function CarContractDetail({isOpen, onClose, carContract, carRentalPost}: CarCon
               <VStack alignItems="flex-start" gap="0" flex="1">
                 <Text fontWeight="500">Thông tin người thuê:</Text>
                 <Text color="text.gray">{carContract.owner.username}</Text>
-                <Text color="text.gray">{carContract.owner.phoneNumber}</Text>
+                <Text color="text.gray">{carContract.owner.phone_number}</Text>
               </VStack>
               <VStack alignItems="flex-start" gap="0" flex="1">
                 <Text fontWeight="500">Thông tin chủ xe:</Text>
                 <Text color="text.gray">{carContract.renter.username}</Text>
-                <Text color="text.gray">{carContract.renter.phoneNumber}</Text>
+                <Text color="text.gray">{carContract.renter.phone_number}</Text>
               </VStack>
             </HStack>
             <Divider />

@@ -1,18 +1,8 @@
-import {
-  Box,
-  HStack,
-  Spacer,
-  SystemStyleObject,
-  Tag,
-  Text,
-  useDisclosure,
-  VStack
-} from '@chakra-ui/react'
-import CarContractDetail from '../CarContractDetail'
+import {Box, HStack, Spacer, SystemStyleObject, Tag, Text, VStack} from '@chakra-ui/react'
 import {CarContract, CarRentalPost} from '../../../../types/api-response.type'
 import {format} from 'date-fns'
-import {vi} from 'date-fns/locale'
 import {CarContractStatus} from '../../../../enums/common.enum'
+import {useNavigate} from 'react-router-dom'
 
 interface CarContractItemProps {
   carContract: CarContract
@@ -20,7 +10,8 @@ interface CarContractItemProps {
 }
 
 function CarContractItem({carContract, carRentalPost}: CarContractItemProps) {
-  const {isOpen, onOpen, onClose} = useDisclosure()
+  const navigate = useNavigate()
+
   return (
     <HStack
       borderRadius="10px"
@@ -34,7 +25,11 @@ function CarContractItem({carContract, carRentalPost}: CarContractItemProps) {
         bg: 'background',
         cursor: 'pointer'
       }}
-      onClick={onOpen}
+      onClick={() => {
+        navigate(`/mytrips/${carContract.id}`, {
+          state: {contract: carContract, carRentalPost}
+        })
+      }}
     >
       <Box h="120px" w="160px" borderRadius="10px" overflow="hidden">
         <img
@@ -92,12 +87,12 @@ function CarContractItem({carContract, carRentalPost}: CarContractItemProps) {
           {carContract.price_per_day} ETH/ngày
         </Text>
       </VStack>
-      <CarContractDetail
+      {/* <CarContractDetail
         isOpen={isOpen}
         onClose={onClose}
         carContract={carContract}
         carRentalPost={carRentalPost}
-      />
+      /> */}
     </HStack>
   )
 }

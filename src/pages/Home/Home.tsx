@@ -14,7 +14,7 @@ function Home() {
   const [range, setRange] = useState<DateRange | undefined>()
   const [address, setAddress] = useState<Address>()
 
-  const carRentalPost = useCarRentalPostStore(state => state.carRentalPosts)
+  const {carRentalPosts} = useCarRentalPostStore(state => state)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -36,7 +36,7 @@ function Home() {
         spacing={4}
         w="100%"
       >
-        {carRentalPost.map((carRentalPost, index) => (
+        {carRentalPosts.map((carRentalPost, index) => (
           <CarRentalPostItem key={index} carRentalPost={carRentalPost} />
         ))}
       </SimpleGrid>

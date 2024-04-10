@@ -46,7 +46,7 @@ function Navigation() {
         id: profileRes.id,
         email: profileRes.email,
         username: profileRes.username,
-        phoneNumber: profileRes.phone_number
+        phone_number: profileRes.phone_number
       })
     }
 

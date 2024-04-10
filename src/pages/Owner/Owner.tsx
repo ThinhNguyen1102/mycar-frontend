@@ -11,6 +11,8 @@ function Owner() {
   const carRentalPosts = useCarRentalPostStore(state => state.carRentalPosts)
   const userInfo = useUserLoginInfoStore(state => state.userInfo)
 
+  console.log('owner render')
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])

@@ -44,7 +44,7 @@ function Login() {
         id: response.data.user.id,
         email: response.data.user.email,
         username: response.data.user.username,
-        phoneNumber: response.data.user.phone_number
+        phone_number: response.data.user.phone_number
       })
     } catch (err) {
       console.log(err)

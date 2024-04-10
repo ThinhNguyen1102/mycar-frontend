@@ -1,8 +1,10 @@
+import {CarContract, CarRentalPost} from './api-response.type'
+
 export type UserInfo = {
   id: number
   email: string
   username: string
-  phoneNumber: string
+  phone_number: string
 }
 
 export type Address = {
@@ -21,4 +23,9 @@ export type DistrictAPIdata = {
   district_name: string
   district_id: string
   province_id: string
+}
+
+export type CarContractRouteParams = {
+  contract: CarContract
+  carRentalPost: CarRentalPost
 }

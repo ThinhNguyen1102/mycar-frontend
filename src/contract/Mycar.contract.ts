@@ -3,7 +3,6 @@ import BaseSmartContract from './interfaces/BaseSmartContact'
 import MycarAbi from './abis/mycar-abi.json'
 // import * as dotenv from 'dotenv'
 import {CarContractSM, PayPayloadSM} from '../types/contract.type'
-import {TransactionResponse} from '@ethersproject/abstract-provider'
 // dotenv.config({
 //   path: path.resolve(__dirname, '..', '..', '.env')
 // })
