@@ -12,7 +12,7 @@ import {
   Select
 } from '@chakra-ui/react'
 import React, {useEffect} from 'react'
-import {Address, DistrictAPIdata, ProvinceAPIdata} from '../../../../types/common.type'
+import {Address, DistrictAPIdata, ProvinceAPIdata} from '../../types/common.type'
 import axios from 'axios'
 
 interface AddressModelProps {
@@ -116,7 +116,7 @@ function AddressSelectModel({isOpen, onClose, address, setAddress}: AddressModel
         </ModalBody>
 
         <ModalFooter>
-          <Button>Tiếp tục</Button>
+          <Button onClick={onClose}>Tiếp tục</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

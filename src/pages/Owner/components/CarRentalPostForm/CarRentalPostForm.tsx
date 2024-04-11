@@ -21,7 +21,7 @@ import callApi from '../../../../utils/api'
 import {GrMapLocation} from 'react-icons/gr'
 import {MdOutlineAddPhotoAlternate} from 'react-icons/md'
 import {TiDeleteOutline} from 'react-icons/ti'
-import AddressSelectModel from '../../../Home/components/AddressSelectModal'
+import AddressSelectModel from '../../../../components/AddressSelectModal'
 import {CarRentalPost} from '../../../../types/api-response.type'
 
 type ImageLocal = {

@@ -7,6 +7,7 @@ import {MdOutlineGasMeter} from 'react-icons/md'
 import {PiArmchairBold, PiGasCanBold} from 'react-icons/pi'
 import {TbManualGearbox} from 'react-icons/tb'
 import {CarRentalPost} from '../../../../types/api-response.type'
+import React from 'react'
 
 interface PostDetailInfoProps {
   carRentalPost: CarRentalPost | undefined

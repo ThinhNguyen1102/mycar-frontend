@@ -3,6 +3,7 @@ import {
   Divider,
   HStack,
   Spacer,
+  Spinner,
   Text,
   useDisclosure,
   useToast,
@@ -10,7 +11,7 @@ import {
 } from '@chakra-ui/react'
 import {CarContract, CarRentalPost} from '../../../../types/api-response.type'
 import {add, differenceInDays, format} from 'date-fns'
-import DateSelectModal from '../../../Home/components/DateSelectModal'
+import DateSelectModal from '../../../../components/DateSelectModal'
 import {useState} from 'react'
 import {DateRange} from 'react-day-picker'
 import {vi} from 'date-fns/locale'
@@ -18,15 +19,19 @@ import useContractStore from '../../../../hooks/contract.store'
 import useUserLoginInfoStore from '../../../../hooks/user-login-info.store'
 import callApi from '../../../../utils/api'
 import useCarContractStore from '../../../../hooks/car-contract.store'
+import {useNavigate} from 'react-router-dom'
 
 interface PostDetailCostProps {
   carRentalPost: CarRentalPost | undefined
+  setIsLoaded: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function PostDetailCost({carRentalPost}: PostDetailCostProps) {
+function PostDetailCost({carRentalPost, setIsLoaded}: PostDetailCostProps) {
+  // const [isWaitingWallet, setIsWaitingWallet] = useState(false)
   const {isOpen: isOpenDate, onOpen: onOpenDate, onClose: onCloseDate} = useDisclosure()
   const [range, setRange] = useState<DateRange | undefined>()
   const toast = useToast()
+  const navigate = useNavigate()
 
   const myCarContract = useContractStore(state => state.mycarContract)
   const address = useContractStore(state => state.address)
@@ -46,7 +51,12 @@ function PostDetailCost({carRentalPost}: PostDetailCostProps) {
       return
     }
 
-    if (carRentalPost && userInfo && myCarContract && range?.from && range?.to) {
+    if (!(carRentalPost && userInfo && myCarContract && range?.from && range?.to)) return
+
+    // setIsWaitingWallet(true)
+    setIsLoaded(true)
+
+    try {
       const {data: carContract} = await callApi<CarContract>(`/api/v1/car-contracts`, 'POST', {
         renter_id: userInfo?.id,
         owner_id: carRentalPost?.owner_id,
@@ -56,6 +66,26 @@ function PostDetailCost({carRentalPost}: PostDetailCostProps) {
       })
 
       addCarContract(carContract)
+
+      const txHash = await myCarContract.pay({
+        contract_id: carContract.id,
+        amount:
+          carRentalPost.mortgage +
+          carRentalPost?.price_per_day * differenceInDays(range?.to, range?.from),
+        email: userInfo.email
+      })
+
+      // setIsWaitingWallet(false)
+      setIsLoaded(true)
+
+      await callApi(`/api/v1/car-contracts/${carContract.id}/payment/confirm`, 'POST', {
+        tx_hash: txHash
+      })
+
+      // setIsLoaded(false)
+      navigate(`/mytrips/${carContract.id}`)
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -187,7 +217,9 @@ function PostDetailCost({carRentalPost}: PostDetailCostProps) {
           bg={range?.from && range?.to ? 'primary.500' : 'text.gray'}
           onClick={handleOnRentButtonClick}
         >
-          CHỌN THUÊ
+          {/* {!isWaitingWallet && <Text>CHỌN THUÊ</Text>}
+          {isWaitingWallet && <Spinner thickness="3px" color="white" speed="1s" />} */}
+          <Text>CHỌN THUÊ</Text>
         </Button>
       </VStack>
       <DateSelectModal

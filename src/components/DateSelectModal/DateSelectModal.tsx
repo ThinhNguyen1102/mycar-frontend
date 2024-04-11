@@ -63,7 +63,7 @@ function DateSelectModal({isOpen, onClose, range, setRange}: DateSelectModalProp
             p="24px 24px 24px 24px"
           >
             <Text fontWeight="500">{footer}</Text>
-            <Button>Tiếp tục</Button>
+            <Button onClick={onClose}>Tiếp tục</Button>
           </HStack>
         </ModalFooter>
       </ModalContent>
