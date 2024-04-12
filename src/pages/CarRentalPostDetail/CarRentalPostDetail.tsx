@@ -1,19 +1,7 @@
-import {
-  Box,
-  Center,
-  Grid,
-  GridItem,
-  Heading,
-  HStack,
-  Portal,
-  Spinner,
-  Text,
-  VStack
-} from '@chakra-ui/react'
+import {Center, Grid, GridItem, HStack, Portal, Spinner, Text, VStack} from '@chakra-ui/react'
 import {useParams} from 'react-router-dom'
 import PostDetailInfo from './components/PostDetailInfo'
 import PostDetailCost from './components/PostDetailCost'
-import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 import {useEffect, useState} from 'react'
 import {CarRentalPost} from '../../types/api-response.type'
 import callApi from '../../utils/api'
@@ -23,9 +11,6 @@ function CarRentalPostDetail() {
   const {postId} = useParams()
   const [carRentalPost, setCarRentalPost] = useState<CarRentalPost | undefined>()
   const [isLoaded, setIsLoaded] = useState(false)
-
-  // const carRentalPosts = useCarRentalPostStore(state => state.carRentalPosts)
-  // const post = carRentalPosts.find(post => post.id === Number(postId))
 
   useEffect(() => {
     if (Number.isNaN(postId)) return

@@ -29,6 +29,13 @@ export type CarRentalPost = {
     prefecture_name: string
   }
   carRentalPostFeatures: string[]
+  carContracts: CarContractWithTime[]
+}
+
+export type CarContractWithTime = {
+  id: number
+  start_date: Date
+  end_date: Date
 }
 
 export type ContractFulfillment = {
@@ -46,6 +53,7 @@ export type ContractTxHistory = {
   id: number
   tx_hash: string
   tx_type: string
+  tx_value: number
   created_at: Date
 }
 

@@ -11,12 +11,16 @@ import {
   VStack
 } from '@chakra-ui/react'
 import {CarContract} from '../../../../types/api-response.type'
+import {formatTxInfo} from '../../../../utils/helpers'
+import {format} from 'date-fns'
+import {ContractTransactionType} from '../../../../enums/common.enum'
 
 interface ContractTxHistoriesProps {
   contract: CarContract
 }
 
 function ContractTxHistories({contract}: ContractTxHistoriesProps) {
+  console.log('contract', contract)
   return (
     <VStack
       bg="white"
@@ -33,12 +37,13 @@ function ContractTxHistories({contract}: ContractTxHistoriesProps) {
       </Text>
       <Accordion allowMultiple w="100%" h="100%">
         {contract?.contractTxHistories.map(tx => {
+          const txInfo = formatTxInfo(tx, contract)
           return (
             <AccordionItem key={tx.tx_hash} borderColor="white">
               <h2>
-                <AccordionButton pl="0">
+                <AccordionButton pl="0" _hover={{bg: 'transparent'}}>
                   <Box as="span" flex="1" textAlign="left">
-                    Nguyễn Văn A đã thanh toán 0.2 ETH
+                    {txInfo.content}
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
@@ -46,22 +51,25 @@ function ContractTxHistories({contract}: ContractTxHistoriesProps) {
               <AccordionPanel pb={4} pt="0">
                 <VStack gap="0" alignItems="flex-start">
                   <Text fontSize="12px" color="text.gray">
-                    Thời gian: 10:00 - 20/10/2021
+                    Thời gian: {format(new Date(tx.created_at), 'HH:mm dd/MM/yyyy')}
                   </Text>
-                  <Text fontSize="12px" color="text.gray">
-                    Nội dung: Thanh toán tiền thuê xe
-                  </Text>
-                  <Text fontSize="12px" color="text.gray">
-                    Số tiền: 0.2 ETH
-                  </Text>
-                  <HStack>
+                  {txInfo.value > 0 && (
                     <Text fontSize="12px" color="text.gray">
-                      Trạng thái:{' '}
+                      Giá trị: {txInfo.value} ETH
                     </Text>
-                    <Text fontSize="12px" color="#4cd137">
-                      Đã hoàn thành
-                    </Text>
-                  </HStack>
+                  )}
+                  {tx.tx_type !== ContractTransactionType.PAYMENT &&
+                    tx.tx_type !== ContractTransactionType.CAR_CONTRACT_CREATE && (
+                      <Text fontSize="12px" color="text.gray">
+                        Chủ xe nhận: {txInfo.owner_receive} ETH
+                      </Text>
+                    )}
+                  {tx.tx_type !== ContractTransactionType.PAYMENT &&
+                    tx.tx_type !== ContractTransactionType.CAR_CONTRACT_CREATE && (
+                      <Text fontSize="12px" color="text.gray">
+                        Người thuê nhận: {txInfo.renter_receive} ETH
+                      </Text>
+                    )}
                   <HStack>
                     <Text fontSize="12px" color="text.gray">
                       Xem giao dịch trên etherscan:
@@ -70,7 +78,7 @@ function ContractTxHistories({contract}: ContractTxHistoriesProps) {
                       fontSize="12px"
                       color="#0fbcf9"
                       target="_blank"
-                      href="https://sepolia.etherscan.io/tx/0xd0821811442bb47fcadb238bd0bfdb947387f53a00155897ecfebd78dd6a56ba"
+                      href={`https://sepolia.etherscan.io/tx/${tx.tx_hash}`}
                     >
                       open
                     </Link>

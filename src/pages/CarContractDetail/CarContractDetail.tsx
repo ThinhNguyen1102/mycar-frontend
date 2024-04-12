@@ -44,7 +44,7 @@ function CarContractDetail() {
       <Heading p="30px 0">Hợp đồng chi tiết</Heading>
       {contract && carRentalPost && (
         <VStack w="80%">
-          <ContractStageProcess />
+          <ContractStageProcess contract={contract} />
           <HStack w="100%" h="100%" borderRadius="10px">
             <ContractInformation carRentalPost={carRentalPost} contract={contract} />
             <ContractTxHistories contract={contract} />

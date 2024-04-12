@@ -3,7 +3,6 @@ import {
   Divider,
   HStack,
   Spacer,
-  Spinner,
   Text,
   useDisclosure,
   useToast,
@@ -19,7 +18,7 @@ import useContractStore from '../../../../hooks/contract.store'
 import useUserLoginInfoStore from '../../../../hooks/user-login-info.store'
 import callApi from '../../../../utils/api'
 import useCarContractStore from '../../../../hooks/car-contract.store'
-import {useNavigate} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 
 interface PostDetailCostProps {
   carRentalPost: CarRentalPost | undefined
@@ -27,11 +26,13 @@ interface PostDetailCostProps {
 }
 
 function PostDetailCost({carRentalPost, setIsLoaded}: PostDetailCostProps) {
-  // const [isWaitingWallet, setIsWaitingWallet] = useState(false)
   const {isOpen: isOpenDate, onOpen: onOpenDate, onClose: onCloseDate} = useDisclosure()
   const [range, setRange] = useState<DateRange | undefined>()
   const toast = useToast()
   const navigate = useNavigate()
+  const location = useLocation()
+
+  console.log(carRentalPost)
 
   const myCarContract = useContractStore(state => state.mycarContract)
   const address = useContractStore(state => state.address)
@@ -53,7 +54,6 @@ function PostDetailCost({carRentalPost, setIsLoaded}: PostDetailCostProps) {
 
     if (!(carRentalPost && userInfo && myCarContract && range?.from && range?.to)) return
 
-    // setIsWaitingWallet(true)
     setIsLoaded(true)
 
     try {
@@ -75,16 +75,25 @@ function PostDetailCost({carRentalPost, setIsLoaded}: PostDetailCostProps) {
         email: userInfo.email
       })
 
-      // setIsWaitingWallet(false)
       setIsLoaded(true)
 
       await callApi(`/api/v1/car-contracts/${carContract.id}/payment/confirm`, 'POST', {
         tx_hash: txHash
       })
 
-      // setIsLoaded(false)
-      navigate(`/mytrips/${carContract.id}`)
+      if (location.pathname === `/post/${carRentalPost.id}`) {
+        navigate(`/mytrips/${carContract.id}`)
+      }
     } catch (error) {
+      setIsLoaded(false)
+      toast({
+        title: 'Đã xảy ra lỗi khi tạo hợp đồng thuê xe. Vui lòng thử lại sau.',
+        status: 'error',
+        duration: 3000,
+        position: 'top-right',
+        colorScheme: 'common.error',
+        isClosable: true
+      })
       console.log(error)
     }
   }
@@ -227,6 +236,10 @@ function PostDetailCost({carRentalPost, setIsLoaded}: PostDetailCostProps) {
         onClose={onCloseDate}
         range={range}
         setRange={setRange}
+        disabledDays={carRentalPost?.carContracts.map(contract => ({
+          from: new Date(contract.start_date),
+          to: new Date(contract.end_date)
+        }))}
       />
     </VStack>
   )

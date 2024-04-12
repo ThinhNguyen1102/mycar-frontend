@@ -10,7 +10,13 @@ export const theme = extendTheme(
         dark: '#1D1D1F',
         gray: '#6e6e73',
         light: '#ffffff',
-        error: '#ff4d4d'
+        error: '#f03e3e'
+      },
+      common: {
+        error: '#f03e3e',
+        success: '#40c057',
+        warning: '#ffd43b',
+        info: '#228be6'
       },
       background: '#F5F5F7'
     },

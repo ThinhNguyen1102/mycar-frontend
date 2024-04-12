@@ -58,27 +58,27 @@ function CarContractItem({carContract, carRentalPost}: CarContractItemProps) {
       <Spacer />
       <VStack height="100%" alignItems="flex-end">
         {carContract.contract_status === CarContractStatus.WAITING_APPROVAL && (
-          <Tag bg="#ffd43b" sx={styles.status_tag}>
+          <Tag bg="common.warning" sx={styles.status_tag}>
             Chờ xác nhận
           </Tag>
         )}
         {carContract.contract_status === CarContractStatus.REJECTED && (
-          <Tag bg="#f03e3e" sx={styles.status_tag}>
+          <Tag bg="common.error" sx={styles.status_tag}>
             Đã từ chối
           </Tag>
         )}
         {carContract.contract_status === CarContractStatus.APPROVED && (
-          <Tag bg="#228be6" sx={styles.status_tag}>
+          <Tag bg="common.info" sx={styles.status_tag}>
             Đã xác nhận
           </Tag>
         )}
         {carContract.contract_status === CarContractStatus.ENDED && (
-          <Tag bg="#40c057" sx={styles.status_tag}>
+          <Tag bg="common.success" sx={styles.status_tag}>
             Đã kết thúc
           </Tag>
         )}
         {carContract.contract_status === CarContractStatus.CANCELED && (
-          <Tag bg="#f03e3e" sx={styles.status_tag}>
+          <Tag bg="common.error" sx={styles.status_tag}>
             Đã hủy
           </Tag>
         )}
