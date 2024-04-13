@@ -7,16 +7,15 @@ import useUserLoginInfoStore from '../../hooks/user-login-info.store'
 import {useEffect} from 'react'
 import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 import callApi from '../../utils/api'
-import {CarContract, CarRentalPost} from '../../types/api-response.type'
-import useCarContractStore from '../../hooks/car-contract.store'
+import {CarRentalPost} from '../../types/api-response.type'
+import {useShallow} from 'zustand/react/shallow'
 
 function Navigation() {
-  const userInfo = useUserLoginInfoStore(state => state.userInfo)
+  const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
   const navigate = useNavigate()
   const setToken = useUserLoginInfoStore(state => state.setToken)
   const setUserInfo = useUserLoginInfoStore(state => state.setUserInfo)
   const setCarRentalPost = useCarRentalPostStore(state => state.setCarRentalPosts)
-  const setCarContracts = useCarContractStore(state => state.setCarContracts)
 
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token')
@@ -33,13 +32,7 @@ function Navigation() {
         'GET',
         null
       )
-      const {data: carContracts} = await callApi<CarContract[]>(
-        `/api/v1/car-contracts`,
-        'GET',
-        null
-      )
 
-      setCarContracts(carContracts)
       setCarRentalPost(carRentalPosts)
       setToken(accessToken ?? '', refreshToken ?? '')
       setUserInfo({
@@ -51,7 +44,7 @@ function Navigation() {
     }
 
     handleInitApp()
-  }, [navigate, setCarContracts, setCarRentalPost, setToken, setUserInfo])
+  }, [navigate, setCarRentalPost, setToken, setUserInfo])
 
   return (
     <HStack

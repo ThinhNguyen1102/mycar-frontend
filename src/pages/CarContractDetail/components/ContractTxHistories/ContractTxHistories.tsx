@@ -21,7 +21,6 @@ interface ContractTxHistoriesProps {
 }
 
 function ContractTxHistories({contract}: ContractTxHistoriesProps) {
-  console.log('contract', contract)
   return (
     <VStack
       bg="white"

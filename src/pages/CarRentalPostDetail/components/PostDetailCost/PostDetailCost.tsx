@@ -17,8 +17,8 @@ import {vi} from 'date-fns/locale'
 import useContractStore from '../../../../hooks/contract.store'
 import useUserLoginInfoStore from '../../../../hooks/user-login-info.store'
 import callApi from '../../../../utils/api'
-import useCarContractStore from '../../../../hooks/car-contract.store'
 import {useLocation, useNavigate} from 'react-router-dom'
+import {useShallow} from 'zustand/react/shallow'
 
 interface PostDetailCostProps {
   carRentalPost: CarRentalPost | undefined
@@ -32,12 +32,9 @@ function PostDetailCost({carRentalPost, setIsLoaded}: PostDetailCostProps) {
   const navigate = useNavigate()
   const location = useLocation()
 
-  console.log(carRentalPost)
-
   const myCarContract = useContractStore(state => state.mycarContract)
   const address = useContractStore(state => state.address)
-  const userInfo = useUserLoginInfoStore(state => state.userInfo)
-  const addCarContract = useCarContractStore(state => state.addCarContract)
+  const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
 
   async function handleOnRentButtonClick() {
     if (!address) {
@@ -64,8 +61,6 @@ function PostDetailCost({carRentalPost, setIsLoaded}: PostDetailCostProps) {
         start_date_ts: range?.from.getTime(),
         end_date_ts: range?.to.getTime()
       })
-
-      addCarContract(carContract)
 
       const txHash = await myCarContract.pay({
         contract_id: carContract.id,

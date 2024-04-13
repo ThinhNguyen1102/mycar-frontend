@@ -5,13 +5,16 @@ import {useEffect, useState} from 'react'
 import {CarRentalPost} from '../../types/api-response.type'
 import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 import useUserLoginInfoStore from '../../hooks/user-login-info.store'
+import {useShallow} from 'zustand/react/shallow'
+import _ from 'lodash'
 
 function Owner() {
   const [currentEditPost, setCurrentEditPost] = useState<CarRentalPost | null>(null)
-  const carRentalPosts = useCarRentalPostStore(state => state.carRentalPosts)
-  const userInfo = useUserLoginInfoStore(state => state.userInfo)
-
-  console.log('owner render')
+  const carRentalPosts = useCarRentalPostStore(
+    state => state.carRentalPosts,
+    (a: CarRentalPost[], b: CarRentalPost[]) => _.isEqual(a, b)
+  )
+  const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
 
   useEffect(() => {
     window.scrollTo(0, 0)

@@ -21,6 +21,7 @@ import {IoIosInformationCircleOutline} from 'react-icons/io'
 import {CarContract} from '../../../../../../types/api-response.type'
 import useUserLoginInfoStore from '../../../../../../hooks/user-login-info.store'
 import callApi from '../../../../../../utils/api'
+import {useShallow} from 'zustand/react/shallow'
 
 interface AppovedStatusProps {
   contract: CarContract
@@ -28,7 +29,7 @@ interface AppovedStatusProps {
 }
 
 export function AppovedStatus({contract, setIsLoaded}: AppovedStatusProps) {
-  const userInfo = useUserLoginInfoStore(state => state.userInfo)
+  const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
   const toast = useToast()
 
   const {

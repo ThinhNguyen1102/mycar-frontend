@@ -1,11 +1,10 @@
 import {useEffect, useState} from 'react'
 import {useParams} from 'react-router-dom'
 import {Heading, HStack, VStack} from '@chakra-ui/react'
-import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 import ContractStageProcess from './components/ContractStageProcess'
 import ContractInformation from './components/ContractInformation'
 import ContractTxHistories from './components/ContractTxHistories'
-import {CarContract} from '../../types/api-response.type'
+import {CarContract, CarRentalPost} from '../../types/api-response.type'
 import callApi from '../../utils/api'
 import PageLoading from '../../components/PageLoading'
 import GlobalLoading from '../../components/GlobalLoading'
@@ -13,12 +12,10 @@ import GlobalLoading from '../../components/GlobalLoading'
 function CarContractDetail() {
   const {contractId} = useParams()
   const [contract, setContract] = useState<CarContract | undefined>()
+  const [carRentalPost, setCarRentalPost] = useState<CarRentalPost | undefined>()
   const [isLoaded, setIsLoaded] = useState(false)
 
-  const carRentalPosts = useCarRentalPostStore(state => state.carRentalPosts)
-  const carRentalPost = carRentalPosts.find(
-    carRentalPost => carRentalPost.id === Number(contract?.post_id)
-  )
+  console.log('render')
 
   useEffect(() => {
     if (Number.isNaN(contractId)) return
@@ -30,7 +27,14 @@ function CarContractDetail() {
         null
       )
 
+      const {data: carRentalPost} = await callApi<CarRentalPost>(
+        `/api/v1/car-rental-posts/${carContract.post_id}/detail`,
+        'GET',
+        null
+      )
+
       setContract(carContract)
+      setCarRentalPost(carRentalPost)
     }
 
     getCarContract()

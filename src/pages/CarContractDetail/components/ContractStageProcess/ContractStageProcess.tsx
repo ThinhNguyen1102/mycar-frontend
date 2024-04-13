@@ -10,6 +10,7 @@ import {
 import AppovedStatus from './components/ApprovedStatus'
 import RejectStatus from './components/RejectStatus'
 import CancelStatus from './components/CancelStatus'
+import {useShallow} from 'zustand/react/shallow'
 
 interface ContractStageProcessProps {
   contract: CarContract
@@ -18,7 +19,7 @@ interface ContractStageProcessProps {
 }
 
 function ContractStageProcess({contract, setIsLoaded, setContract}: ContractStageProcessProps) {
-  const userInfo = useUserLoginInfoStore(state => state.userInfo)
+  const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
 
   return (
     <VStack w="100%" bg="white" borderRadius="10px" p="20px">

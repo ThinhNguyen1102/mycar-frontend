@@ -1,4 +1,4 @@
-import {Center, Grid, GridItem, HStack, Portal, Spinner, Text, VStack} from '@chakra-ui/react'
+import {Center, Grid, GridItem, HStack, VStack} from '@chakra-ui/react'
 import {useParams} from 'react-router-dom'
 import PostDetailInfo from './components/PostDetailInfo'
 import PostDetailCost from './components/PostDetailCost'

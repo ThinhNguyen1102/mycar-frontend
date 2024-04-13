@@ -1,4 +1,4 @@
-import {create} from 'zustand'
+import {createWithEqualityFn} from 'zustand/traditional'
 import {CarRentalPost} from '../types/api-response.type'
 
 export interface CarRentalPostStore {
@@ -6,7 +6,7 @@ export interface CarRentalPostStore {
   setCarRentalPosts: (carRentalPosts: CarRentalPost[]) => void
 }
 
-const useCarRentalPostStore = create<CarRentalPostStore>()(set => ({
+const useCarRentalPostStore = createWithEqualityFn<CarRentalPostStore>()(set => ({
   carRentalPosts: [],
   setCarRentalPosts: carRentalPosts => set({carRentalPosts})
 }))

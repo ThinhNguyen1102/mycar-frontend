@@ -9,6 +9,7 @@ import {DateRange} from 'react-day-picker'
 import {Address} from '../../types/common.type'
 import PageLoading from '../../components/PageLoading'
 import useUserLoginInfoStore from '../../hooks/user-login-info.store'
+import {useShallow} from 'zustand/react/shallow'
 
 function Home() {
   const {isOpen: isOpenAddress, onOpen: onOpenAddress, onClose: onCloseAddress} = useDisclosure()
@@ -17,7 +18,7 @@ function Home() {
   const [address, setAddress] = useState<Address>()
 
   const carRentalPosts = useCarRentalPostStore(state => state.carRentalPosts)
-  const userInfo = useUserLoginInfoStore(state => state.userInfo)
+  const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
 
   useEffect(() => {
     window.scrollTo(0, 0)

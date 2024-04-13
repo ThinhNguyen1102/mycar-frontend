@@ -14,16 +14,21 @@ import {useEffect, useState} from 'react'
 import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 import useUserLoginInfoStore from '../../hooks/user-login-info.store'
 import {Link} from 'react-router-dom'
-import {CarContract} from '../../types/api-response.type'
+import {CarContract, CarRentalPost} from '../../types/api-response.type'
 import callApi from '../../utils/api'
+import _ from 'lodash'
+import {useShallow} from 'zustand/react/shallow'
 
 function MyTrip() {
   const [ownerCarContracts, setOwnerCarContracts] = useState<CarContract[] | undefined>()
   const [renterCarContracts, setRenterCarContracts] = useState<CarContract[] | undefined>()
   const [isLoadeding, setIsLoadeding] = useState(true)
 
-  const carRentalPosts = useCarRentalPostStore(state => state.carRentalPosts)
-  const userInfo = useUserLoginInfoStore(state => state.userInfo)
+  const carRentalPosts = useCarRentalPostStore(
+    state => state.carRentalPosts,
+    (a: CarRentalPost[], b: CarRentalPost[]) => _.isEqual(a, b)
+  )
+  const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
 
   useEffect(() => {
     window.scrollTo(0, 0)

@@ -22,6 +22,7 @@ import {CarContract} from '../../../../../../types/api-response.type'
 import useUserLoginInfoStore from '../../../../../../hooks/user-login-info.store'
 import useContractStore from '../../../../../../hooks/contract.store'
 import callApi from '../../../../../../utils/api'
+import {useShallow} from 'zustand/react/shallow'
 
 interface WaitingApprovalStatusOwnerProps {
   contract: CarContract
@@ -37,7 +38,7 @@ export function WaitingApprovalStatusOwner({
   const totalPrice = contract.price_per_day * contract.num_of_days
   const toast = useToast()
 
-  const userInfo = useUserLoginInfoStore(state => state.userInfo)
+  const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
   const myCarContract = useContractStore(state => state.mycarContract)
   const address = useContractStore(state => state.address)
 
