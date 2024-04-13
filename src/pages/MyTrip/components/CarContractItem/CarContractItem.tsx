@@ -87,12 +87,6 @@ function CarContractItem({carContract, carRentalPost}: CarContractItemProps) {
           {carContract.price_per_day} ETH/ngày
         </Text>
       </VStack>
-      {/* <CarContractDetail
-        isOpen={isOpen}
-        onClose={onClose}
-        carContract={carContract}
-        carRentalPost={carRentalPost}
-      /> */}
     </HStack>
   )
 }

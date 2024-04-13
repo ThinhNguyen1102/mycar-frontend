@@ -1,6 +1,11 @@
-import {Divider, HStack, Text, VStack} from '@chakra-ui/react'
+import {Box, Divider, HStack, Icon, SystemStyleObject, Text, VStack} from '@chakra-ui/react'
 import {CarContract, CarRentalPost} from '../../../../types/api-response.type'
 import {format} from 'date-fns'
+import {IconType} from 'react-icons'
+import {FaCar} from 'react-icons/fa'
+import {FaUser} from 'react-icons/fa'
+import {BsFillLuggageFill} from 'react-icons/bs'
+import {FaEthereum} from 'react-icons/fa'
 
 interface ContractInformationProps {
   carRentalPost: CarRentalPost
@@ -17,35 +22,60 @@ function ContractInformation({carRentalPost, contract}: ContractInformationProps
       alignItems="flex-start"
       flex="3"
     >
-      <Text fontSize="18px" fontWeight="500">
-        THÔNG TIN HỢP ĐỒNG THUÊ XE
-      </Text>
+      <Box bg="primary.500" w="100%" p="0 10px" borderRadius="5px">
+        <Text fontSize="18px" fontWeight="500" color="white">
+          THÔNG TIN HỢP ĐỒNG THUÊ XE
+        </Text>
+      </Box>
+      <Divider />
       <VStack alignItems="flex-start" gap="0">
-        <Text fontWeight="500">Thông tin xe:</Text>
-        <Text color="text.gray">{carRentalPost?.brand + ' - ' + carRentalPost?.model}</Text>
-        <Text color="text.gray">{carRentalPost?.license_plate}</Text>
+        <SubTitle title="Thông tin xe:" icon={FaCar} />
+        <Text sx={styles.content}>{carRentalPost?.brand + ' - ' + carRentalPost?.model}</Text>
+        <Text sx={styles.content}>{carRentalPost?.license_plate}</Text>
       </VStack>
       <Divider />
       <HStack w="100%">
         <VStack alignItems="flex-start" gap="0" flex="1">
-          <Text fontWeight="500">Thông tin người thuê:</Text>
-          <Text color="text.gray">{contract?.owner.username}</Text>
-          <Text color="text.gray">{contract?.owner.phone_number}</Text>
+          <SubTitle title="Thông tin người thuê:" icon={FaUser} />
+          <Text sx={styles.content}>{contract?.owner.username}</Text>
+          <Text sx={styles.content}>
+            E-mail:{' '}
+            <Box as="span" fontWeight="500">
+              {contract?.renter.email}
+            </Box>
+          </Text>
+          <Text sx={styles.content}>
+            Điện thoại:{' '}
+            <Box as="span" fontWeight="500">
+              {contract?.renter.phone_number}
+            </Box>
+          </Text>
         </VStack>
         <VStack alignItems="flex-start" gap="0" flex="1">
-          <Text fontWeight="500">Thông tin chủ xe:</Text>
-          <Text color="text.gray">{contract?.renter.username}</Text>
-          <Text color="text.gray">{contract?.renter.phone_number}</Text>
+          <SubTitle title="Thông tin chủ xe:" icon={FaUser} />
+          <Text sx={styles.content}>{contract?.renter.username}</Text>
+          <Text sx={styles.content}>
+            E-mail:{' '}
+            <Box as="span" fontWeight="500">
+              {contract?.renter.email}
+            </Box>
+          </Text>
+          <Text sx={styles.content}>
+            Điện thoại:{' '}
+            <Box as="span" fontWeight="500">
+              {contract?.renter.phone_number}
+            </Box>
+          </Text>
         </VStack>
       </HStack>
       <Divider />
       <VStack alignItems="flex-start" gap="0">
-        <Text fontWeight="500">Thông tin chuyến đi:</Text>
-        <Text color="text.gray">
+        <SubTitle title="Thông tin chuyến đi:" icon={BsFillLuggageFill} />
+        <Text sx={styles.content}>
           {format(contract?.start_date, 'hh:mm dd/MM/yyyy')} -{' '}
           {format(contract?.end_date, 'hh:mm dd/MM/yyyy')}
         </Text>
-        <Text color="text.gray">
+        <Text sx={styles.content}>
           {carRentalPost?.carRentalPostAddress.district_name},{' '}
           {carRentalPost?.carRentalPostAddress.prefecture_name}
         </Text>
@@ -53,35 +83,95 @@ function ContractInformation({carRentalPost, contract}: ContractInformationProps
       <Divider />
       <HStack w="100%" alignItems="flex-start">
         <VStack alignItems="flex-start" gap="0" flex="1">
-          <Text fontWeight="500">Thông tin đơn giá:</Text>
-          <Text color="text.gray">Phí thuê 1 ngày: {contract?.price_per_day} ETH/ngày</Text>
-          <Text color="text.gray">Thế chấp: {contract?.mortgage} ETH (mặc định)</Text>
-          <Text color="text.gray">Số lượng ngày: {contract?.num_of_days} ngày</Text>
-          <Text color="text.gray">
-            Tổng đơn giá: {contract?.price_per_day * contract?.num_of_days + contract?.mortgage} ETH
+          <SubTitle title="Thông tin đơn giá:" icon={FaEthereum} />
+          <Text sx={styles.content}>
+            Phí thuê 1 ngày:{' '}
+            <Box as="span" fontWeight="500">
+              {contract?.price_per_day}
+            </Box>{' '}
+            ETH/ngày
+          </Text>
+          <Text sx={styles.content}>
+            Thế chấp:{' '}
+            <Box as="span" fontWeight="500">
+              {contract?.mortgage}
+            </Box>{' '}
+            ETH (mặc định)
+          </Text>
+          <Text sx={styles.content}>
+            Số lượng ngày:{' '}
+            <Box as="span" fontWeight="500">
+              {contract?.num_of_days}
+            </Box>{' '}
+            ngày
+          </Text>
+          <Text sx={styles.content}>
+            Tổng đơn giá:{' '}
+            <Box as="span" fontWeight="500">
+              {contract?.price_per_day * contract?.num_of_days + contract?.mortgage}
+            </Box>{' '}
+            ETH
           </Text>
         </VStack>
         <VStack alignItems="flex-start" gap="0" flex="1">
-          <Text color="text.gray" fontSize="12px" fontWeight="500">
-            Phụ phí:
+          <SubTitle title="Phụ phí:" icon={FaEthereum} />
+          <Text sx={styles.content}>
+            Phí quá giờ (1 giờ):{' '}
+            <Box as="span" fontWeight="500">
+              {contract?.over_limit_fee}
+            </Box>{' '}
+            ETH
           </Text>
-          <Text fontSize="12px" color="text.gray">
-            Phí quá giờ (1 giờ): {contract?.over_time_fee} ETH
+          <Text sx={styles.content}>
+            Phí quá giới hạn (1 km):{' '}
+            <Box as="span" fontWeight="500">
+              {contract?.over_time_fee}
+            </Box>{' '}
+            ETH
           </Text>
-          <Text fontSize="12px" color="text.gray">
-            Phí quá giới hạn (1 km): {contract?.over_limit_fee} ETH
+          <Text sx={styles.content}>
+            Phí vệ sinh:{' '}
+            <Box as="span" fontWeight="500">
+              {contract?.cleaning_fee}
+            </Box>{' '}
+            ETH
           </Text>
-          <Text fontSize="12px" color="text.gray">
-            Phí vệ sinh: {contract?.cleaning_fee} ETH
-          </Text>
-          <Text fontSize="12px" color="text.gray">
-            Phí vệ khử mùi: {contract?.deodorization_fee} ETH
+          <Text sx={styles.content}>
+            Phí vệ khử mùi:{' '}
+            <Box as="span" fontWeight="500">
+              {contract?.deodorization_fee}
+            </Box>{' '}
+            ETH
           </Text>
         </VStack>
       </HStack>
       <Divider />
     </VStack>
   )
+}
+
+function SubTitle({title, icon}: {title: string; icon: IconType}) {
+  return (
+    <HStack>
+      <Icon as={icon} />
+      <Text sx={styles.title}>{title}</Text>
+    </HStack>
+  )
+}
+
+type Styles = {
+  title: SystemStyleObject
+  content: SystemStyleObject
+}
+
+const styles: Styles = {
+  title: {
+    fontWeight: '500',
+    fontSize: '18px'
+  },
+  content: {
+    color: 'text.gray'
+  }
 }
 
 export default ContractInformation

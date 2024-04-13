@@ -1,18 +1,56 @@
-import {Heading, Tab, TabList, TabPanel, TabPanels, Tabs, VStack} from '@chakra-ui/react'
+import {
+  Heading,
+  Skeleton,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+  VStack
+} from '@chakra-ui/react'
 import CarContractItem from './components/CarContractItem'
-import {useEffect} from 'react'
-import useCarContractStore from '../../hooks/car-contract.store'
+import {useEffect, useState} from 'react'
 import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 import useUserLoginInfoStore from '../../hooks/user-login-info.store'
+import {Link} from 'react-router-dom'
+import {CarContract} from '../../types/api-response.type'
+import callApi from '../../utils/api'
 
 function MyTrip() {
-  const carContracts = useCarContractStore(state => state.carContracts)
+  const [ownerCarContracts, setOwnerCarContracts] = useState<CarContract[] | undefined>()
+  const [renterCarContracts, setRenterCarContracts] = useState<CarContract[] | undefined>()
+  const [isLoadeding, setIsLoadeding] = useState(true)
+
   const carRentalPosts = useCarRentalPostStore(state => state.carRentalPosts)
   const userInfo = useUserLoginInfoStore(state => state.userInfo)
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
+
+  useEffect(() => {
+    if (!userInfo) return
+
+    setIsLoadeding(true)
+    const fetchCarContracts = async () => {
+      const {data: carContracts} = await callApi<CarContract[]>(
+        `/api/v1/car-contracts`,
+        'GET',
+        null
+      )
+
+      setOwnerCarContracts(carContracts.filter(carContract => carContract.owner.id === userInfo.id))
+      setRenterCarContracts(
+        carContracts.filter(carContract => carContract.renter.id === userInfo.id)
+      )
+    }
+
+    setIsLoadeding(false)
+    fetchCarContracts()
+  }, [userInfo])
+
+  console.log('render')
 
   return (
     <VStack p="80px 0" w="calc(100vw - 10px)" bg="background">
@@ -24,35 +62,80 @@ function MyTrip() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <VStack>
-              {carContracts.length > 0 &&
-                carContracts
-                  .filter(carContract => carContract.renter.id === userInfo?.id)
-                  .map(carContract => (
-                    <CarContractItem
-                      key={carContract.id}
-                      carContract={carContract}
-                      carRentalPost={
-                        carRentalPosts.find(post => post.id === carContract.post_id) ?? null
-                      }
+            <VStack minH="300px">
+              {!isLoadeding &&
+                renterCarContracts &&
+                renterCarContracts.length > 0 &&
+                renterCarContracts.map(carContract => (
+                  <CarContractItem
+                    key={carContract.id}
+                    carContract={carContract}
+                    carRentalPost={
+                      carRentalPosts.find(post => post.id === carContract.post_id) ?? null
+                    }
+                  />
+                ))}
+              {!isLoadeding && renterCarContracts && renterCarContracts.length === 0 && (
+                <VStack justifyContent="center">
+                  <Text fontSize="20px" fontWeight="500" color="text.gray">
+                    Không có chuyến thuê nào!!!
+                  </Text>
+                  <Link to="/">
+                    <Text color="blue.500">Thuê ngay</Text>
+                  </Link>
+                </VStack>
+              )}
+              {isLoadeding && (
+                <VStack w="100%" h="100%">
+                  {[1, 2, 3].map((_, index) => (
+                    <Skeleton
+                      key={index}
+                      startColor="gray.200"
+                      endColor="gray.100"
+                      borderRadius="10px"
+                      height="100px"
+                      w="100%"
                     />
                   ))}
+                </VStack>
+              )}
             </VStack>
           </TabPanel>
           <TabPanel>
-            <VStack>
-              {carContracts.length > 0 &&
-                carContracts
-                  .filter(carContract => carContract.owner.id === userInfo?.id)
-                  .map(carContract => (
-                    <CarContractItem
-                      key={carContract.id}
-                      carContract={carContract}
-                      carRentalPost={
-                        carRentalPosts.find(post => post.id === carContract.post_id) ?? null
-                      }
+            <VStack minH="300px">
+              {!isLoadeding &&
+                ownerCarContracts &&
+                ownerCarContracts.length > 0 &&
+                ownerCarContracts.map(carContract => (
+                  <CarContractItem
+                    key={carContract.id}
+                    carContract={carContract}
+                    carRentalPost={
+                      carRentalPosts.find(post => post.id === carContract.post_id) ?? null
+                    }
+                  />
+                ))}
+              {!isLoadeding && ownerCarContracts && ownerCarContracts.length === 0 && (
+                <VStack justifyContent="center">
+                  <Text fontSize="20px" fontWeight="500" color="text.gray">
+                    Không có chuyến cho thuê nào!!!
+                  </Text>
+                </VStack>
+              )}
+              {isLoadeding && (
+                <VStack justifyContent="center">
+                  {[1, 2, 3].map((_, index) => (
+                    <Skeleton
+                      key={index}
+                      startColor="gray.200"
+                      endColor="gray.100"
+                      borderRadius="10px"
+                      height="100px"
+                      w="100%"
                     />
                   ))}
+                </VStack>
+              )}
             </VStack>
           </TabPanel>
         </TabPanels>

@@ -8,6 +8,7 @@ import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 import {DateRange} from 'react-day-picker'
 import {Address} from '../../types/common.type'
 import PageLoading from '../../components/PageLoading'
+import useUserLoginInfoStore from '../../hooks/user-login-info.store'
 
 function Home() {
   const {isOpen: isOpenAddress, onOpen: onOpenAddress, onClose: onCloseAddress} = useDisclosure()
@@ -15,7 +16,8 @@ function Home() {
   const [range, setRange] = useState<DateRange | undefined>()
   const [address, setAddress] = useState<Address>()
 
-  const {carRentalPosts} = useCarRentalPostStore(state => state)
+  const carRentalPosts = useCarRentalPostStore(state => state.carRentalPosts)
+  const userInfo = useUserLoginInfoStore(state => state.userInfo)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -46,9 +48,11 @@ function Home() {
             spacing={4}
             w="100%"
           >
-            {carRentalPosts.map((carRentalPost, index) => (
-              <CarRentalPostItem key={index} carRentalPost={carRentalPost} />
-            ))}
+            {carRentalPosts
+              .filter(post => post.owner.id !== userInfo?.id)
+              .map((carRentalPost, index) => (
+                <CarRentalPostItem key={index} carRentalPost={carRentalPost} />
+              ))}
           </SimpleGrid>
           <AddressSelectModel
             isOpen={isOpenAddress}

@@ -1,4 +1,14 @@
-import {Box, Divider, Heading, HStack, Icon, SimpleGrid, Text, VStack} from '@chakra-ui/react'
+import {
+  Avatar,
+  Box,
+  Divider,
+  Heading,
+  HStack,
+  Icon,
+  SimpleGrid,
+  Text,
+  VStack
+} from '@chakra-ui/react'
 import {BiCategory} from 'react-icons/bi'
 import {BsLuggage} from 'react-icons/bs'
 import {FaRegStar} from 'react-icons/fa'
@@ -149,6 +159,41 @@ function PostDetailInfo({carRentalPost}: PostDetailInfoProps) {
             - Quản trị viên có quyền hủy chuyến nếu có lý do chính đáng (không mất phí).
           </Text>
         </VStack>
+      </VStack>
+      <VStack w="100%" alignItems="flex-start" gap="20px">
+        <Text fontWeight="500" fontSize="20px">
+          Chủ xe
+        </Text>
+        <HStack w="100%" justifyContent="space-between">
+          <HStack gap="20px">
+            <Avatar size="xl" />
+            <VStack alignItems="flex-start" gap="5px">
+              <Text fontWeight="500" fontSize="20px">
+                {carRentalPost?.owner.username}
+              </Text>
+              <HStack gap="15px">
+                <HStack>
+                  <Icon fontSize="14px" as={FaRegStar} />
+                  <Text fontWeight="bold" fontSize="12px" color="text.gray" display="inline">
+                    4
+                  </Text>
+                </HStack>
+                <HStack>
+                  <Icon fontSize="14px" as={BsLuggage} />
+                  <Text fontWeight="bold" fontSize="12px" color="text.gray" display="inline">
+                    4 chuyến
+                  </Text>
+                </HStack>
+              </HStack>
+            </VStack>
+          </HStack>
+          <VStack gap="5px">
+            <Text color="text.gray">Tỉ lệ đồng ý</Text>
+            <Text fontSize="20px" fontWeight="500">
+              70%
+            </Text>
+          </VStack>
+        </HStack>
       </VStack>
     </VStack>
   )

@@ -75,8 +75,6 @@ function PostDetailCost({carRentalPost, setIsLoaded}: PostDetailCostProps) {
         email: userInfo.email
       })
 
-      setIsLoaded(true)
-
       await callApi(`/api/v1/car-contracts/${carContract.id}/payment/confirm`, 'POST', {
         tx_hash: txHash
       })

@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Divider,
   HStack,
   Link,
   Text,
@@ -32,9 +33,12 @@ function ContractTxHistories({contract}: ContractTxHistoriesProps) {
       p="20px"
       borderRadius="10px"
     >
-      <Text fontSize="18px" fontWeight="500">
-        LỊCH SỬ GIAO DỊCH
-      </Text>
+      <Box w="100%" bg="primary.500" p="0 10px" borderRadius="5px">
+        <Text fontSize="18px" fontWeight="500" color="white">
+          LỊCH SỬ GIAO DỊCH
+        </Text>
+      </Box>
+      <Divider />
       <Accordion allowMultiple w="100%" h="100%">
         {contract?.contractTxHistories.map(tx => {
           const txInfo = formatTxInfo(tx, contract)
@@ -42,7 +46,7 @@ function ContractTxHistories({contract}: ContractTxHistoriesProps) {
             <AccordionItem key={tx.tx_hash} borderColor="white">
               <h2>
                 <AccordionButton pl="0" _hover={{bg: 'transparent'}}>
-                  <Box as="span" flex="1" textAlign="left">
+                  <Box as="span" flex="1" textAlign="left" fontWeight="500" color="text.gray">
                     {txInfo.content}
                   </Box>
                   <AccordionIcon />

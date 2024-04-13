@@ -6,6 +6,7 @@ import {useEffect, useState} from 'react'
 import {CarRentalPost} from '../../types/api-response.type'
 import callApi from '../../utils/api'
 import PageLoading from '../../components/PageLoading'
+import GlobalLoading from '../../components/GlobalLoading'
 
 function CarRentalPostDetail() {
   const {postId} = useParams()
@@ -58,29 +59,7 @@ function CarRentalPostDetail() {
           <PageLoading />
         </Center>
       )}
-      {isLoaded && (
-        <Portal>
-          <Center
-            position="fixed"
-            top="0"
-            left="0"
-            right="0"
-            bottom="0"
-            bg="rgba(255, 255, 255, 0.8)"
-          >
-            <VStack gap="20px">
-              <Spinner
-                thickness="5px"
-                speed="1s"
-                emptyColor="gray.200"
-                color="primary.500"
-                size="xl"
-              />
-              <Text fontWeight="bold">Đang tạo hợp đồng, vui lòng đợi trong giây lát!!!</Text>
-            </VStack>
-          </Center>
-        </Portal>
-      )}
+      {isLoaded && <GlobalLoading message="Đang tạo hợp đồng, vui lòng đợi trong giây lát!!!" />}
     </VStack>
   )
 }
