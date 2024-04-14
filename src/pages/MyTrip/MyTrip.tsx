@@ -49,13 +49,11 @@ function MyTrip() {
       setRenterCarContracts(
         carContracts.filter(carContract => carContract.renter.id === userInfo.id)
       )
+      setIsLoadeding(false)
     }
 
-    setIsLoadeding(false)
     fetchCarContracts()
   }, [userInfo])
-
-  console.log('render')
 
   return (
     <VStack p="80px 0" w="calc(100vw - 10px)" bg="background">

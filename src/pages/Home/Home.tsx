@@ -10,6 +10,8 @@ import {Address} from '../../types/common.type'
 import PageLoading from '../../components/PageLoading'
 import useUserLoginInfoStore from '../../hooks/user-login-info.store'
 import {useShallow} from 'zustand/react/shallow'
+import {CarRentalPost} from '../../types/api-response.type'
+import _ from 'lodash'
 
 function Home() {
   const {isOpen: isOpenAddress, onOpen: onOpenAddress, onClose: onCloseAddress} = useDisclosure()
@@ -17,7 +19,10 @@ function Home() {
   const [range, setRange] = useState<DateRange | undefined>()
   const [address, setAddress] = useState<Address>()
 
-  const carRentalPosts = useCarRentalPostStore(state => state.carRentalPosts)
+  const carRentalPosts = useCarRentalPostStore(
+    state => state.carRentalPosts,
+    (a: CarRentalPost[], b: CarRentalPost[]) => _.isEqual(a, b)
+  )
   const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
 
   useEffect(() => {

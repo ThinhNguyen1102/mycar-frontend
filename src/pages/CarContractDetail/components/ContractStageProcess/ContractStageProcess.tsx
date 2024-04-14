@@ -11,6 +11,8 @@ import AppovedStatus from './components/ApprovedStatus'
 import RejectStatus from './components/RejectStatus'
 import CancelStatus from './components/CancelStatus'
 import {useShallow} from 'zustand/react/shallow'
+import StartStatus from './components/StartStatus'
+import EndStatus from './components/EndStatus'
 
 interface ContractStageProcessProps {
   contract: CarContract
@@ -30,33 +32,45 @@ function ContractStageProcess({contract, setIsLoaded, setContract}: ContractStag
           </Text>
         </Box>
         <Spacer />
-        <VStack>
-          {contract.contract_status === CarContractStatus.WAITING_APPROVAL && (
-            <Tag bg="common.warning" sx={styles.status_tag}>
-              Chờ xác nhận
-            </Tag>
-          )}
-          {contract.contract_status === CarContractStatus.REJECTED && (
-            <Tag bg="common.error" sx={styles.status_tag}>
-              Đã từ chối
-            </Tag>
-          )}
-          {contract.contract_status === CarContractStatus.APPROVED && (
-            <Tag bg="common.info" sx={styles.status_tag}>
-              Đã xác nhận
-            </Tag>
-          )}
-          {contract.contract_status === CarContractStatus.ENDED && (
-            <Tag bg="common.success" sx={styles.status_tag}>
-              Đã kết thúc
-            </Tag>
-          )}
-          {contract.contract_status === CarContractStatus.CANCELED && (
-            <Tag bg="common.error" sx={styles.status_tag}>
-              Đã hủy
-            </Tag>
-          )}
-        </VStack>
+        {contract.is_processing && (
+          <Text fontSize="14px" fontWeight="500" color="#f59f00">
+            Đang xử lý...
+          </Text>
+        )}
+        {!contract.is_processing && (
+          <VStack>
+            {contract.contract_status === CarContractStatus.WAITING_APPROVAL && (
+              <Tag bg="common.warning" sx={styles.status_tag}>
+                Chờ xác nhận
+              </Tag>
+            )}
+            {contract.contract_status === CarContractStatus.REJECTED && (
+              <Tag bg="common.error" sx={styles.status_tag}>
+                Đã từ chối
+              </Tag>
+            )}
+            {contract.contract_status === CarContractStatus.APPROVED && (
+              <Tag bg="common.info" sx={styles.status_tag}>
+                Đã xác nhận
+              </Tag>
+            )}
+            {contract.contract_status === CarContractStatus.ENDED && (
+              <Tag bg="common.success" sx={styles.status_tag}>
+                Đã kết thúc
+              </Tag>
+            )}
+            {contract.contract_status === CarContractStatus.STARTED && (
+              <Tag bg="common.info" sx={styles.status_tag}>
+                Đã bắt đầu
+              </Tag>
+            )}
+            {contract.contract_status === CarContractStatus.CANCELED && (
+              <Tag bg="common.error" sx={styles.status_tag}>
+                Đã hủy
+              </Tag>
+            )}
+          </VStack>
+        )}
       </HStack>
       <Divider />
 
@@ -64,14 +78,6 @@ function ContractStageProcess({contract, setIsLoaded, setContract}: ContractStag
         contract.contract_status === CarContractStatus.WAITING_APPROVAL && (
           <WaitingApprovalStatusRenter contract={contract} />
         )}
-      {userInfo?.id === contract.renter.id &&
-        contract.contract_status === CarContractStatus.APPROVED && (
-          <AppovedStatus contract={contract} setIsLoaded={setIsLoaded} />
-        )}
-      {userInfo?.id === contract.renter.id &&
-        contract.contract_status === CarContractStatus.REJECTED && <RejectStatus />}
-      {userInfo?.id === contract.renter.id &&
-        contract.contract_status === CarContractStatus.CANCELED && <CancelStatus />}
       {userInfo?.id === contract.owner.id &&
         contract.contract_status === CarContractStatus.WAITING_APPROVAL && (
           <WaitingApprovalStatusOwner
@@ -80,14 +86,15 @@ function ContractStageProcess({contract, setIsLoaded, setContract}: ContractStag
             setContract={setContract}
           />
         )}
-      {userInfo?.id === contract.owner.id &&
-        contract.contract_status === CarContractStatus.APPROVED && (
-          <AppovedStatus contract={contract} setIsLoaded={setIsLoaded} />
-        )}
-      {userInfo?.id === contract.owner.id &&
-        contract.contract_status === CarContractStatus.REJECTED && <RejectStatus />}
-      {userInfo?.id === contract.owner.id &&
-        contract.contract_status === CarContractStatus.CANCELED && <CancelStatus />}
+      {contract.contract_status === CarContractStatus.APPROVED && (
+        <AppovedStatus contract={contract} setIsLoaded={setIsLoaded} setContract={setContract} />
+      )}
+      {contract.contract_status === CarContractStatus.REJECTED && <RejectStatus />}
+      {contract.contract_status === CarContractStatus.CANCELED && <CancelStatus />}
+      {contract.contract_status === CarContractStatus.STARTED && (
+        <StartStatus contract={contract} setContract={setContract} setIsLoaded={setIsLoaded} />
+      )}
+      {contract.contract_status === CarContractStatus.ENDED && <EndStatus />}
     </VStack>
   )
 }

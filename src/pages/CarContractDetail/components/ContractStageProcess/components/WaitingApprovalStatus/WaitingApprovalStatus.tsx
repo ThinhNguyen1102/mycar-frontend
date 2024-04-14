@@ -118,12 +118,7 @@ export function WaitingApprovalStatusOwner({
 
       await callApi(`/api/v1/car-contracts/${contract.id}/reject`, 'POST', {})
 
-      const {data: newCarContract} = await callApi<CarContract>(
-        `/api/v1/car-contracts/${contract.id}/detail`,
-        'GET',
-        null
-      )
-      setContract(newCarContract)
+      setContract(value => (value ? {...value, is_processing: true} : undefined))
 
       setIsLoaded(false)
       onCloseRejectConfirm()
@@ -167,6 +162,7 @@ export function WaitingApprovalStatusOwner({
           p="10px"
           borderRadius="5px"
           onClick={handleApproveContract}
+          sx={contract.is_processing ? styles.disabled_button : undefined}
         >
           <Text fontSize="14px" color="white">
             Xác nhận
@@ -180,6 +176,7 @@ export function WaitingApprovalStatusOwner({
           p="10px"
           borderRadius="5px"
           onClick={onOpenRejectConfirm}
+          sx={contract.is_processing ? styles.disabled_button : undefined}
         >
           <Text fontSize="14px" color="white">
             Từ chối
@@ -226,6 +223,7 @@ export function WaitingApprovalStatusRenter({contract}: WaitingApprovalStatusRen
 type Styles = {
   note: SystemStyleObject
   status_tag: SystemStyleObject
+  disabled_button: SystemStyleObject
 }
 
 const styles: Styles = {
@@ -242,5 +240,9 @@ const styles: Styles = {
     fontWeight: 'bold',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  disabled_button: {
+    bg: 'gray.300!important',
+    pointerEvents: 'none'
   }
 }

@@ -77,6 +77,7 @@ export type CarContract = {
   cleaning_fee: number
   deodorization_fee: number
   num_of_days: number
+  is_processing: boolean
   created_at: Date
   updated_at: Date
   reviews: any[]

@@ -26,9 +26,10 @@ import {useShallow} from 'zustand/react/shallow'
 interface AppovedStatusProps {
   contract: CarContract
   setIsLoaded: React.Dispatch<React.SetStateAction<boolean>>
+  setContract: React.Dispatch<React.SetStateAction<CarContract | undefined>>
 }
 
-export function AppovedStatus({contract, setIsLoaded}: AppovedStatusProps) {
+export function AppovedStatus({contract, setIsLoaded, setContract}: AppovedStatusProps) {
   const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
   const toast = useToast()
 
@@ -38,10 +39,14 @@ export function AppovedStatus({contract, setIsLoaded}: AppovedStatusProps) {
     onClose: onCloseCancelConfirm
   } = useDisclosure()
 
+  const {
+    isOpen: isOpenStartConfirm,
+    onOpen: onOpenStartConfirm,
+    onClose: onCloseStartConfirm
+  } = useDisclosure()
+
   const handleCancelContract = async () => {
     if (!contract || !userInfo) return
-
-    if (userInfo?.id !== contract.owner.id) return
 
     try {
       setIsLoaded(true)
@@ -52,8 +57,37 @@ export function AppovedStatus({contract, setIsLoaded}: AppovedStatusProps) {
         await callApi(`/api/v1/car-contracts/${contract.id}/renter/cancel`, 'POST', {})
       }
 
+      setContract(value => (value ? {...value, is_processing: true} : undefined))
+
       setIsLoaded(false)
       onCloseCancelConfirm()
+    } catch (error) {
+      setIsLoaded(false)
+      toast({
+        title: 'Đã xảy ra lỗi khi từ chối hợp đồng thuê xe. Vui lòng thử lại sau.',
+        status: 'error',
+        duration: 3000,
+        position: 'top-right',
+        isClosable: true
+      })
+      console.log(error)
+    }
+  }
+
+  const handleStartContract = async () => {
+    if (!contract || !userInfo) return
+
+    if (userInfo?.id !== contract.renter.id) return
+
+    try {
+      setIsLoaded(true)
+
+      await callApi(`/api/v1/car-contracts/${contract.id}/start`, 'POST', {})
+
+      setContract(value => (value ? {...value, is_processing: true} : undefined))
+
+      setIsLoaded(false)
+      onCloseStartConfirm()
     } catch (error) {
       setIsLoaded(false)
       toast({
@@ -103,6 +137,7 @@ export function AppovedStatus({contract, setIsLoaded}: AppovedStatusProps) {
         borderRadius="5px"
         alignSelf="flex-end"
         onClick={onOpenCancelConfirm}
+        sx={contract.is_processing ? styles.disabled_button : undefined}
       >
         <Text fontSize="14px" color="white">
           Hủy
@@ -113,11 +148,12 @@ export function AppovedStatus({contract, setIsLoaded}: AppovedStatusProps) {
           fontWeight="bold"
           w="100px"
           as="button"
-          bg="gray.300"
+          bg="common.info"
           p="10px"
           borderRadius="5px"
           alignSelf="flex-end"
-          pointerEvents="none"
+          onClick={onOpenStartConfirm}
+          sx={contract.is_processing ? styles.disabled_button : undefined}
         >
           <Text fontSize="14px" color="white">
             Bắt đầu
@@ -146,6 +182,27 @@ export function AppovedStatus({contract, setIsLoaded}: AppovedStatusProps) {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <Modal isOpen={isOpenStartConfirm} onClose={onCloseStartConfirm}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            <Text fontWeight="500">Xác nhận bắt đầu hợp đồng</Text>
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <Text color="text.gray">
+              Bạn có chắc chắn muốn bắt đầu hợp đồng này? Hành động này không thể hoàn tác.
+            </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button bg="common.info" mr={3} onClick={handleStartContract}>
+              Bắt đầu
+            </Button>
+            <Button onClick={onCloseStartConfirm}>Hủy</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </HStack>
   )
 }
@@ -153,6 +210,7 @@ export function AppovedStatus({contract, setIsLoaded}: AppovedStatusProps) {
 type Styles = {
   note: SystemStyleObject
   status_tag: SystemStyleObject
+  disabled_button: SystemStyleObject
 }
 
 const styles: Styles = {
@@ -169,5 +227,9 @@ const styles: Styles = {
     fontWeight: 'bold',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  disabled_button: {
+    bg: 'gray.300!important',
+    pointerEvents: 'none'
   }
 }

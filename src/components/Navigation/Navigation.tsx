@@ -1,7 +1,6 @@
 import {Avatar, Box, Divider, HStack, Icon, Text} from '@chakra-ui/react'
-import {Link, useNavigate} from 'react-router-dom'
+import {Link, useLocation, useNavigate} from 'react-router-dom'
 import {IoMdNotificationsOutline} from 'react-icons/io'
-import {MdOutlineKeyboardArrowDown} from 'react-icons/md'
 import ConnectWallet from './ConnectWallet'
 import useUserLoginInfoStore from '../../hooks/user-login-info.store'
 import {useEffect} from 'react'
@@ -16,6 +15,10 @@ function Navigation() {
   const setToken = useUserLoginInfoStore(state => state.setToken)
   const setUserInfo = useUserLoginInfoStore(state => state.setUserInfo)
   const setCarRentalPost = useCarRentalPostStore(state => state.setCarRentalPosts)
+
+  const location = useLocation()
+
+  console.log(location.pathname === '/owner')
 
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token')
@@ -63,12 +66,22 @@ function Navigation() {
 
       <HStack gap="20px">
         <Link to="/owner">
-          <Text fontWeight="500">Trở thành chủ xe</Text>
+          <Box
+            bg={location.pathname === '/owner' ? 'background' : 'transparent'}
+            borderRadius="5px"
+            p="8px"
+          >
+            <Text fontWeight="500">Trở thành chủ xe</Text>
+          </Box>
         </Link>
         <Link to="/mytrips">
-          <Text fontWeight="500" ml="30px">
-            Chuyến của tôi
-          </Text>
+          <Box
+            bg={location.pathname === '/mytrips' ? 'background' : 'transparent'}
+            borderRadius="5px"
+            p="8px"
+          >
+            <Text fontWeight="500">Chuyến của tôi</Text>
+          </Box>
         </Link>
         <Divider orientation="vertical" color="text.gray" w="1px" h="16px" />
         <Box as="button" fontSize="25px" pt="5px">
@@ -77,9 +90,6 @@ function Navigation() {
         <HStack as="button">
           <Avatar size="sm" />
           <Text fontWeight="500">{userInfo?.username}</Text>
-          <Box fontSize="20px" pt="7px">
-            <Icon as={MdOutlineKeyboardArrowDown} />
-          </Box>
         </HStack>
         <ConnectWallet />
       </HStack>

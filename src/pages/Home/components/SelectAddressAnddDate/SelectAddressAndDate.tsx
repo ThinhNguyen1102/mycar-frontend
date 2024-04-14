@@ -37,7 +37,7 @@ function SelectAddressAndDate({onOpenDate, onOpenAddress, address}: SelectAddres
           justifyContent="space-between"
           onClick={onOpenAddress}
         >
-          <Text fontSize="16px" fontWeight="bold" textAlign="left">
+          <Text fontWeight="bold" textAlign="left">
             {address?.prefecture_name && address?.district_name
               ? `${address.district_name}, ${address.prefecture_name}`
               : 'Chọn địa điểm'}
@@ -56,9 +56,7 @@ function SelectAddressAndDate({onOpenDate, onOpenAddress, address}: SelectAddres
           <Text color="text.gray">Thời gian thuê</Text>
         </HStack>
         <HStack w="90%" as="button" ml="32px" justifyContent="space-between" onClick={onOpenDate}>
-          <Text fontSize="20px" fontWeight="bold">
-            Hà Nộiiiiiiiiiiiiiiiiiiiiiiii
-          </Text>
+          <Text fontWeight="bold">Hà Nộiiiiiiiiiiiiiiiiiiiiiiii</Text>
           <Box fontSize="20px" pt="7px">
             <Icon as={MdOutlineKeyboardArrowDown} />
           </Box>
