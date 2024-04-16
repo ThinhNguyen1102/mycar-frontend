@@ -8,6 +8,9 @@ import {CarContract, CarRentalPost} from '../../types/api-response.type'
 import callApi from '../../utils/api'
 import PageLoading from '../../components/PageLoading'
 import GlobalLoading from '../../components/GlobalLoading'
+import {pusherClient} from '../../libs/pusher'
+import {CarContractUpdatePayload} from '../../types/pusher.type'
+import {CarContractMessageType, CarContractStatus} from '../../enums/common.enum'
 
 function CarContractDetail() {
   const {contractId} = useParams()
@@ -15,7 +18,58 @@ function CarContractDetail() {
   const [carRentalPost, setCarRentalPost] = useState<CarRentalPost | undefined>()
   const [isLoaded, setIsLoaded] = useState(false)
 
-  console.log('render')
+  const updateCarContract = async (status: CarContractStatus, data: CarContractUpdatePayload) => {
+    setContract(contract => {
+      return contract
+        ? {
+            ...contract,
+            contract_status: status,
+            is_processing: false,
+            contractTxHistories: [...contract.contractTxHistories, data.tx]
+          }
+        : undefined
+    })
+  }
+
+  useEffect(() => {
+    if (!contract) return
+    if (!contractId) return
+
+    pusherClient.subscribe(`car-contract-${contractId}`)
+
+    pusherClient.bind('car-contract::update', (data: CarContractUpdatePayload) => {
+      switch (data.type) {
+        case CarContractMessageType.CREATE_CAR_CONTRACT:
+          break
+        case CarContractMessageType.REFUND_OWNER_REJECTED:
+          updateCarContract(CarContractStatus.REJECTED, data)
+          break
+        case CarContractMessageType.REFUND_OWNER_CANCELED:
+          updateCarContract(CarContractStatus.CANCELED, data)
+          break
+        case CarContractMessageType.REFUND_RENTER_CANCELED:
+          updateCarContract(CarContractStatus.CANCELED, data)
+          break
+        case CarContractMessageType.REFUND_ADMIN_CANCEL:
+          updateCarContract(CarContractStatus.CANCELED, data)
+          break
+        case CarContractMessageType.START_CAR_CONTRACT:
+          updateCarContract(CarContractStatus.STARTED, data)
+          break
+        case CarContractMessageType.END_CAR_CONTRACT:
+          updateCarContract(CarContractStatus.ENDED, data)
+          break
+        default:
+      }
+    })
+
+    return () => {
+      pusherClient.unsubscribe(`car-contract-${contractId}`)
+      pusherClient.unbind('car-contract::update')
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contractId, contract, isLoaded])
 
   useEffect(() => {
     if (Number.isNaN(contractId)) return

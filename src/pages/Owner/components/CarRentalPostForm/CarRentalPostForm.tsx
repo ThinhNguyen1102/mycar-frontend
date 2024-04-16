@@ -62,8 +62,13 @@ function CarRentalPostForm({currentEditPost, setCurrentEditPost}: CarRentalPostF
     handleSubmit,
     formState: {errors},
     reset,
-    setValue
+    setValue,
+    clearErrors
   } = useForm<CarRentalInputs>()
+
+  useEffect(() => {
+    clearErrors()
+  }, [clearErrors, currentEditPost])
 
   useEffect(() => {
     if (!currentEditPost) return
