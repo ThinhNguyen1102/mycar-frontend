@@ -57,6 +57,17 @@ export type ContractTxHistory = {
   created_at: Date
 }
 
+export type PaginationRes = {
+  page: number
+  limit: number
+  total: number
+}
+
+export type GetCarContractsRes = {
+  data: CarContract[]
+  metadata: PaginationRes
+}
+
 export type CarContract = {
   id: number
   post_id: number

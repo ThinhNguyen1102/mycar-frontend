@@ -1,5 +1,4 @@
-import {HStack, Icon, SystemStyleObject, Text, VStack} from '@chakra-ui/react'
-import {IoIosInformationCircleOutline} from 'react-icons/io'
+import {HStack, Text, VStack} from '@chakra-ui/react'
 
 export default function EndStatus() {
   return (

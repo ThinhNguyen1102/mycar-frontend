@@ -1,8 +1,12 @@
 import {
   Box,
   Button,
+  Checkbox,
+  FormControl,
+  FormLabel,
   HStack,
   Icon,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -22,6 +26,7 @@ import {CarContract} from '../../../../../../types/api-response.type'
 import {useShallow} from 'zustand/react/shallow'
 import useUserLoginInfoStore from '../../../../../../hooks/user-login-info.store'
 import callApi from '../../../../../../utils/api'
+import {useForm} from 'react-hook-form'
 
 interface StartStatusProps {
   contract: CarContract
@@ -29,9 +34,24 @@ interface StartStatusProps {
   setContract: React.Dispatch<React.SetStateAction<CarContract | undefined>>
 }
 
+type fulfillmentInfo = {
+  is_cleaning_fee: boolean
+  is_deodorization_fee: boolean
+  over_limit_km: number
+  over_time_hours: number
+}
+
 function StartStatus({contract, setIsLoaded, setContract}: StartStatusProps) {
   const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
   const toast = useToast()
+
+  const {
+    register,
+    handleSubmit,
+    formState: {errors},
+    reset,
+    clearErrors
+  } = useForm<fulfillmentInfo>()
 
   const {
     isOpen: isOpenEndConfirm,
@@ -39,7 +59,7 @@ function StartStatus({contract, setIsLoaded, setContract}: StartStatusProps) {
     onClose: onCloseEndConfirm
   } = useDisclosure()
 
-  const handleEndContract = async () => {
+  const handleEndContract = async (data: fulfillmentInfo) => {
     if (!contract || !userInfo) return
 
     if (userInfo?.id !== contract.owner.id) return
@@ -47,11 +67,12 @@ function StartStatus({contract, setIsLoaded, setContract}: StartStatusProps) {
     try {
       setIsLoaded(true)
 
+      console.log(data)
       await callApi(`/api/v1/car-contracts/${contract.id}/end`, 'POST', {
-        over_limit_km: 0,
-        over_time_hours: 0,
-        is_cleaning_fee: false,
-        is_deodorization_fee: false
+        over_limit_km: Number(data.over_limit_km) ?? 0,
+        over_time_hours: Number(data.over_time_hours) ?? 0,
+        is_cleaning_fee: data.is_cleaning_fee,
+        is_deodorization_fee: data.is_deodorization_fee
       })
 
       setContract(value => (value ? {...value, is_processing: true} : undefined))
@@ -113,16 +134,128 @@ function StartStatus({contract, setIsLoaded, setContract}: StartStatusProps) {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <Text color="text.gray">
-              Bạn có chắc chắn muốn kết thúc hợp đồng này? Hành động này không thể hoàn tác.
-            </Text>
+            <form onSubmit={handleSubmit(handleEndContract)} id="ff-form">
+              <VStack gap="30px">
+                <Text color="text.gray">
+                  Bạn có chắc chắn muốn kết thúc hợp đồng này? Hành động này không thể hoàn tác.
+                </Text>
+                <VStack w="100%" alignItems="flex-start">
+                  <FormControl
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="flex-start"
+                    gap="20px"
+                  >
+                    <FormLabel m="0" minW="120px">
+                      Số giờ quá hạn:
+                    </FormLabel>
+                    <Input
+                      type="number"
+                      _focusVisible={{
+                        boxShadow: 'none'
+                      }}
+                      {...register('over_time_hours', {
+                        required: {
+                          value: true,
+                          message: 'Vui lòng nhập số giờ quá hạn'
+                        },
+                        min: {
+                          value: 0,
+                          message: 'Số giờ quá hạn không được nhỏ hơn 0'
+                        },
+                        max: {
+                          value: 5,
+                          message: 'Số giờ quá hạn không được lớn hơn 5'
+                        }
+                      })}
+                    />
+                  </FormControl>
+                  {errors.over_time_hours && (
+                    <Text
+                      pl="140px"
+                      minH="16px"
+                      fontWeight="500"
+                      fontSize="12px"
+                      color="text.error"
+                    >
+                      {errors.over_time_hours.message}
+                    </Text>
+                  )}
+                  <FormControl
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="flex-start"
+                    gap="20px"
+                  >
+                    <FormLabel m="0" minW="120px">
+                      Số km quá hạn:
+                    </FormLabel>
+                    <Input
+                      type="number"
+                      _focusVisible={{
+                        boxShadow: 'none'
+                      }}
+                      {...register('over_limit_km', {
+                        required: {
+                          value: true,
+                          message: 'Vui lòng nhập số km quá hạn'
+                        },
+                        min: {
+                          value: 0,
+                          message: 'Số km quá hạn không được nhỏ hơn 0'
+                        }
+                      })}
+                    />
+                  </FormControl>
+                  {errors.over_limit_km && (
+                    <Text
+                      pl="140px"
+                      minH="16px"
+                      fontWeight="500"
+                      fontSize="12px"
+                      color="text.error"
+                    >
+                      {errors.over_limit_km.message}
+                    </Text>
+                  )}
+                  <HStack w="100%">
+                    <Checkbox
+                      _focusVisible={{
+                        boxShadow: 'none'
+                      }}
+                      flex={1}
+                      {...register('is_cleaning_fee')}
+                    >
+                      <Text fontWeight="500">Phí vệ sinh</Text>
+                    </Checkbox>
+                    <Checkbox
+                      _focusVisible={{
+                        boxShadow: 'none'
+                      }}
+                      flex={1}
+                      {...register('is_deodorization_fee')}
+                    >
+                      <Text fontWeight="500">Phí khử mùi</Text>
+                    </Checkbox>
+                  </HStack>
+                </VStack>
+              </VStack>
+            </form>
           </ModalBody>
 
           <ModalFooter>
-            <Button bg="common.info" mr={3} onClick={handleEndContract}>
+            <Button form="ff-form" type="submit" bg="common.info" mr={3}>
               Kết thúc
             </Button>
-            <Button onClick={onCloseEndConfirm}>Hủy</Button>
+            <Button
+              onClick={() => {
+                reset()
+                clearErrors()
+                onCloseEndConfirm()
+              }}
+            >
+              Hủy
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

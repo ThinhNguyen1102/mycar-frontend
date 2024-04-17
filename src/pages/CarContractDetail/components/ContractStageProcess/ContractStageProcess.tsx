@@ -73,7 +73,6 @@ function ContractStageProcess({contract, setIsLoaded, setContract}: ContractStag
         )}
       </HStack>
       <Divider />
-
       {userInfo?.id === contract.renter.id &&
         contract.contract_status === CarContractStatus.WAITING_APPROVAL && (
           <WaitingApprovalStatusRenter contract={contract} />
