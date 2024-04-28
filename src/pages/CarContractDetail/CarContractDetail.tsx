@@ -38,8 +38,10 @@ function CarContractDetail() {
     pusherClient.subscribe(`car-contract-${contractId}`)
 
     pusherClient.bind('car-contract::update', (data: CarContractUpdatePayload) => {
+      console.log(data)
       switch (data.type) {
         case CarContractMessageType.CREATE_CAR_CONTRACT:
+          updateCarContract(CarContractStatus.APPROVED, data)
           break
         case CarContractMessageType.REFUND_OWNER_REJECTED:
           updateCarContract(CarContractStatus.REJECTED, data)

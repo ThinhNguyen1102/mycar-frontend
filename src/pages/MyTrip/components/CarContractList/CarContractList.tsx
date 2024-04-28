@@ -1,4 +1,4 @@
-import {HStack, Icon, Skeleton, Text, VStack} from '@chakra-ui/react'
+import {Skeleton, Text, VStack} from '@chakra-ui/react'
 import {useEffect, useState} from 'react'
 import useUserLoginInfoStore from '../../../../hooks/user-login-info.store'
 import {useShallow} from 'zustand/react/shallow'
@@ -7,14 +7,10 @@ import {CarContract, CarRentalPost, GetCarContractsRes} from '../../../../types/
 import CarContractItem from '../CarContractItem'
 import useCarRentalPostStore from '../../../../hooks/car-rental-post.store'
 import _ from 'lodash'
-import {IoIosArrowBack} from 'react-icons/io'
-import {IoIosArrowForward} from 'react-icons/io'
+import Pagination from '../../../../components/Pagination'
+import CarContractFilter from '../CarContractFilter'
 
-interface CarContractItemProps {
-  isRenterTrips: boolean
-}
-
-function CarContractList({isRenterTrips}: CarContractItemProps) {
+function CarContractList() {
   const [carContracts, setCarContracts] = useState<CarContract[] | undefined>()
   const [isLoadeding, setIsLoadeding] = useState(true)
   const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
@@ -25,18 +21,8 @@ function CarContractList({isRenterTrips}: CarContractItemProps) {
 
   const [numOfPages, setNumOfPages] = useState(1)
   const [currentPage, setCurrentPage] = useState(1)
-
-  let arr: number[] = Array.from(Array(numOfPages), (x, index) => index + 1)
-
-  arr = arr.filter(val => {
-    if (currentPage > 3 && currentPage < numOfPages - 2) {
-      return val >= currentPage - 2 && val <= currentPage + 2
-    } else if (currentPage >= numOfPages - 2) {
-      return val >= numOfPages - 4
-    } else {
-      return val <= 5
-    }
-  })
+  const [statuses, setStatuses] = useState<string[]>([])
+  const [types, setTypes] = useState<string[]>([])
 
   useEffect(() => {
     if (!userInfo) return
@@ -45,7 +31,7 @@ function CarContractList({isRenterTrips}: CarContractItemProps) {
 
     const fetchCarContracts = async () => {
       const {data: carContractsRes} = await callApi<GetCarContractsRes>(
-        `/api/v1/car-contracts?type=${isRenterTrips ? 'renter' : 'owner'}&page=${currentPage}&limit=1`,
+        `/api/v1/car-contracts?type=${types.join(';')}&page=${currentPage}&limit=2&status=${statuses.join(';')}`,
         'GET',
         null
       )
@@ -56,93 +42,22 @@ function CarContractList({isRenterTrips}: CarContractItemProps) {
     }
 
     fetchCarContracts()
-  }, [currentPage, isRenterTrips, userInfo])
+  }, [currentPage, userInfo, statuses, types])
 
   return (
     <VStack minH="300px" p="20px" w="80%" bg="white" borderRadius="10px">
-      {!isLoadeding && (
-        <HStack gap="15px">
-          <Icon
-            cursor="pointer"
-            fontSize="20px"
-            as={IoIosArrowBack}
-            color={currentPage === 1 ? 'gray.300' : 'text.primary'}
-            onClick={() => {
-              if (currentPage > 1) setCurrentPage(currentPage - 1)
-            }}
-          />
-          {!arr.includes(1) && (
-            <Text
-              cursor="pointer"
-              fontWeight="500"
-              onClick={() => {
-                setCurrentPage(1)
-              }}
-              color={1 === currentPage ? 'text.primary' : 'gray.300'}
-            >
-              1
-            </Text>
-          )}
-          {!arr.includes(1) && currentPage > 4 && (
-            <Text
-              cursor="pointer"
-              fontWeight="500"
-              onClick={() => {
-                if (currentPage > 4) setCurrentPage(currentPage - 3)
-              }}
-            >
-              ...
-            </Text>
-          )}
-          {arr.map((val, index) => {
-            return (
-              <Text
-                key={index}
-                cursor="pointer"
-                onClick={() => {
-                  setCurrentPage(val)
-                }}
-                fontWeight="500"
-                color={val === currentPage ? 'text.primary' : 'gray.300'}
-              >
-                {val}
-              </Text>
-            )
-          })}
-          {!arr.includes(numOfPages) && currentPage < numOfPages - 3 && (
-            <Text
-              cursor="pointer"
-              fontWeight="500"
-              onClick={() => {
-                if (currentPage < numOfPages - 3) setCurrentPage(currentPage + 3)
-              }}
-            >
-              ...
-            </Text>
-          )}
-          {!arr.includes(numOfPages) && (
-            <Text
-              cursor="pointer"
-              onClick={() => {
-                setCurrentPage(numOfPages)
-              }}
-              fontWeight="500"
-              color={numOfPages === currentPage ? 'text.primary' : 'gray.300'}
-            >
-              {numOfPages}
-            </Text>
-          )}
-          <Icon
-            cursor="pointer"
-            fontSize="20px"
-            color={currentPage === numOfPages ? 'gray.300' : 'text.primary'}
-            as={IoIosArrowForward}
-            onClick={() => {
-              if (currentPage < numOfPages) setCurrentPage(currentPage + 1)
-            }}
-          />
-        </HStack>
-      )}
+      <CarContractFilter
+        statuses={statuses}
+        setStatuses={setStatuses}
+        types={types}
+        setTypes={setTypes}
+        setCurrentPage={setCurrentPage}
+      />
+      <Pagination
+        numOfPages={numOfPages}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
       <VStack w="100%" h="100%">
         {!isLoadeding &&
           carContracts &&
@@ -176,6 +91,11 @@ function CarContractList({isRenterTrips}: CarContractItemProps) {
           </VStack>
         )}
       </VStack>
+      <Pagination
+        numOfPages={numOfPages}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </VStack>
   )
 }

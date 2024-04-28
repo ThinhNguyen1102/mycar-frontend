@@ -23,6 +23,7 @@ import useUserLoginInfoStore from '../../../../../../hooks/user-login-info.store
 import useContractStore from '../../../../../../hooks/contract.store'
 import callApi from '../../../../../../utils/api'
 import {useShallow} from 'zustand/react/shallow'
+import {useNavigate} from 'react-router-dom'
 
 interface WaitingApprovalStatusOwnerProps {
   contract: CarContract
@@ -41,6 +42,8 @@ export function WaitingApprovalStatusOwner({
   const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
   const myCarContract = useContractStore(state => state.mycarContract)
   const address = useContractStore(state => state.address)
+
+  const navigate = useNavigate()
 
   const {
     isOpen: isOpenRejectConfirm,
@@ -74,16 +77,19 @@ export function WaitingApprovalStatusOwner({
         email: userInfo.email
       })
 
+      const res = await callApi(`/api/v1/car-contracts/${contract.id}/in-progress`, 'POST', {})
+
+      if (res) {
+        setTimeout(() => {
+          setIsLoaded(false)
+          navigate(0)
+        }, 1000)
+      }
+
       if (txHash) {
         await callApi(`/api/v1/car-contracts/${contract.id}/payment/confirm`, 'POST', {
           tx_hash: txHash
         })
-        const {data: newCarContract} = await callApi<CarContract>(
-          `/api/v1/car-contracts/${contract.id}/detail`,
-          'GET',
-          null
-        )
-        setContract(newCarContract)
       } else {
         toast({
           title: 'Đã xảy ra lỗi khi tạo hợp đồng thuê xe. Vui lòng thử lại sau.',
@@ -93,8 +99,6 @@ export function WaitingApprovalStatusOwner({
           isClosable: true
         })
       }
-
-      setIsLoaded(false)
     } catch (error) {
       setIsLoaded(false)
       toast({

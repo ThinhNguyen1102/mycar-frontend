@@ -23,6 +23,7 @@ import {MdOutlineAddPhotoAlternate} from 'react-icons/md'
 import {TiDeleteOutline} from 'react-icons/ti'
 import AddressSelectModel from '../../../../components/AddressSelectModal'
 import {CarRentalPost} from '../../../../types/api-response.type'
+import axios from 'axios'
 
 type ImageLocal = {
   url: string
@@ -96,6 +97,22 @@ function CarRentalPostForm({currentEditPost, setCurrentEditPost}: CarRentalPostF
   }, [currentEditPost, setValue])
 
   const onSubmit = async (data: CarRentalInputs) => {
+    const formData = new FormData()
+    imagesLocal.forEach((val, index) => {
+      formData.append(`image`, val.file)
+    })
+
+    const {data: images} = await axios.post(
+      'http://localhost:1102/api/v1/car-rental-posts/upload/images',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: 'Bearer ' + localStorage.getItem('access_token')
+        }
+      }
+    )
+
     const formatData = {
       district_name: address?.district_name,
       prefecture_name: address?.prefecture_name,
@@ -113,10 +130,7 @@ function CarRentalPostForm({currentEditPost, setCurrentEditPost}: CarRentalPostF
       deodorization_fee: data.deodorization_fee,
       year: data.year,
       consumption: data.consumption,
-      car_image_urls: [
-        'https://fastly.picsum.photos/id/889/200/300.jpg?hmac=7pLzsJkl44GS15ct5pL5EiK1I7p-uvVr9xWSB5Xhipw',
-        'https://fastly.picsum.photos/id/341/200/300.jpg?hmac=tZpxFpS1LmFfC4e_ChqA5I8JfUfJuwH3oZvmQ58SzHc'
-      ],
+      car_image_urls: images,
       car_feature_ids: features.map((_, index) => index + 1)
     }
     try {
@@ -137,6 +151,9 @@ function CarRentalPostForm({currentEditPost, setCurrentEditPost}: CarRentalPostF
         }
       }
       reset()
+      setFeatures([])
+      setImagesLocal([])
+      setAddress(undefined)
     } catch (err) {
       console.log(err)
     }
@@ -156,10 +173,6 @@ function CarRentalPostForm({currentEditPost, setCurrentEditPost}: CarRentalPostF
             required: {
               value: true,
               message: 'Biển số xe không được để trống.'
-            },
-            pattern: {
-              value: /^[0-9]{2}[A-Z]{1}-[0-9]{4,5}$/g,
-              message: 'Biển số xe không hợp lệ.'
             }
           })}
         />
