@@ -1,4 +1,4 @@
-import {Center, Grid, GridItem, HStack, VStack} from '@chakra-ui/react'
+import {Box, Center, Grid, GridItem, HStack, VStack} from '@chakra-ui/react'
 import {useParams} from 'react-router-dom'
 import PostDetailInfo from './components/PostDetailInfo'
 import PostDetailCost from './components/PostDetailCost'
@@ -7,6 +7,8 @@ import {CarRentalPost} from '../../types/api-response.type'
 import callApi from '../../utils/api'
 import PageLoading from '../../components/PageLoading'
 import GlobalLoading from '../../components/GlobalLoading'
+import {Slide} from 'react-slideshow-image'
+import 'react-slideshow-image/dist/styles.css'
 
 function CarRentalPostDetail() {
   const {postId} = useParams()
@@ -34,20 +36,6 @@ function CarRentalPostDetail() {
 
   return (
     <VStack p="80px 0" w="calc(100vw - 10px)" bg="background">
-      {carRentalPost && (
-        <Grid
-          w="80%"
-          h="500px"
-          templateRows="repeat(3, 1fr)"
-          templateColumns="repeat(6, 1fr)"
-          gap={4}
-        >
-          <GridItem rowSpan={3} colSpan={4} bg="tomato" />
-          <GridItem colSpan={2} bg="papayawhip" />
-          <GridItem colSpan={2} bg="papayawhip" />
-          <GridItem colSpan={2} bg="tomato" />
-        </Grid>
-      )}
       {carRentalPost && (
         <HStack w="80%" gap="10px">
           <PostDetailInfo carRentalPost={carRentalPost} />

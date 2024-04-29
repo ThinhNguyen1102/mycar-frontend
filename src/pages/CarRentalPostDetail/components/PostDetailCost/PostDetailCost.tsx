@@ -1,5 +1,7 @@
 import {
+  Box,
   Button,
+  Center,
   Divider,
   HStack,
   Spacer,
@@ -19,6 +21,8 @@ import useUserLoginInfoStore from '../../../../hooks/user-login-info.store'
 import callApi from '../../../../utils/api'
 import {useLocation, useNavigate} from 'react-router-dom'
 import {useShallow} from 'zustand/react/shallow'
+import {Slide} from 'react-slideshow-image'
+import 'react-slideshow-image/dist/styles.css'
 
 interface PostDetailCostProps {
   carRentalPost: CarRentalPost | undefined
@@ -91,8 +95,30 @@ function PostDetailCost({carRentalPost, setIsLoaded}: PostDetailCostProps) {
     }
   }
 
+  console.log(carRentalPost?.carImages)
+
   return (
-    <VStack mt="20px" alignSelf="flex-start" flex="2" justifyContent="flex-start">
+    <VStack mt="20px" alignSelf="flex-start" minW="400px" justifyContent="flex-start">
+      <Box w="400px" m="0 auto" p="0">
+        <Slide>
+          {carRentalPost?.carImages.map((image, index) => {
+            console.log(`url(${image})`)
+            return (
+              <Center key={index} bgColor="white" p="20px" borderRadius="10px">
+                <Box
+                  h="270px"
+                  w="360px"
+                  borderRadius="10px"
+                  bgImage={`url(${image})`}
+                  bgSize="cover"
+                  bgPos="center"
+                />
+              </Center>
+            )
+          })}
+        </Slide>
+      </Box>
+
       <VStack
         borderRadius="10px"
         p="20px"

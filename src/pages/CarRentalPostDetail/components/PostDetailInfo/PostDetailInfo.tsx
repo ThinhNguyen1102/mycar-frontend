@@ -25,7 +25,7 @@ interface PostDetailInfoProps {
 
 function PostDetailInfo({carRentalPost}: PostDetailInfoProps) {
   return (
-    <VStack p="20px" borderRadius="10px" mt="20px" bg="white" flex="4" w="100%" gap="20px">
+    <VStack p="20px" borderRadius="10px" mt="20px" bg="white" flex="1" w="100%" gap="20px">
       <VStack w="100%" alignItems="flex-start">
         <Heading>{carRentalPost?.brand + ' - ' + carRentalPost?.model}</Heading>
         <HStack w="100%" gap="15px">
