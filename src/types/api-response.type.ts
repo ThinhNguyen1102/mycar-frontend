@@ -93,3 +93,13 @@ export type CarContract = {
   updated_at: Date
   reviews: any[]
 }
+
+export type NotificationRes = {
+  id: number
+  title: string
+  content: string
+  is_read: boolean
+  created_at: Date
+  updated_at: Date
+  user_id: number
+}

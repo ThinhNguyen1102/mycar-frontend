@@ -1,13 +1,14 @@
-import {Avatar, Box, Divider, HStack, Icon, Text} from '@chakra-ui/react'
+import {Avatar, Box, Divider, HStack, Text} from '@chakra-ui/react'
 import {Link, useLocation, useNavigate} from 'react-router-dom'
-import {IoMdNotificationsOutline} from 'react-icons/io'
 import ConnectWallet from './ConnectWallet'
 import useUserLoginInfoStore from '../../hooks/user-login-info.store'
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import useCarRentalPostStore from '../../hooks/car-rental-post.store'
 import callApi from '../../utils/api'
-import {CarRentalPost} from '../../types/api-response.type'
+import {CarRentalPost, NotificationRes} from '../../types/api-response.type'
 import {useShallow} from 'zustand/react/shallow'
+import Notification from './Notification'
+import {pusherClient} from '../../libs/pusher'
 
 function Navigation() {
   const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
@@ -15,10 +16,9 @@ function Navigation() {
   const setToken = useUserLoginInfoStore(state => state.setToken)
   const setUserInfo = useUserLoginInfoStore(state => state.setUserInfo)
   const setCarRentalPost = useCarRentalPostStore(state => state.setCarRentalPosts)
+  const [notifications, setNotifications] = useState<NotificationRes[]>([])
 
   const location = useLocation()
-
-  console.log(location.pathname === '/owner')
 
   useEffect(() => {
     const accessToken = localStorage.getItem('access_token')
@@ -35,7 +35,13 @@ function Navigation() {
         'GET',
         null
       )
+      const {data: notifications}: {data: NotificationRes[]} = await callApi<any>(
+        `/api/v1/users/notifications`,
+        'GET',
+        null
+      )
 
+      setNotifications(notifications)
       setCarRentalPost(carRentalPosts)
       setToken(accessToken ?? '', refreshToken ?? '')
       setUserInfo({
@@ -48,6 +54,24 @@ function Navigation() {
 
     handleInitApp()
   }, [navigate, setCarRentalPost, setToken, setUserInfo])
+
+  useEffect(() => {
+    if (!userInfo) return
+
+    pusherClient.subscribe(`user-${userInfo.id}`)
+
+    pusherClient.bind(
+      'notification::new',
+      ({newNotification}: {newNotification: NotificationRes}) => {
+        setNotifications(prev => [newNotification, ...prev])
+      }
+    )
+
+    return () => {
+      pusherClient.unsubscribe(`user-${userInfo.id}`)
+      pusherClient.unbind('notification::new')
+    }
+  }, [userInfo])
 
   return (
     <HStack
@@ -84,9 +108,7 @@ function Navigation() {
           </Box>
         </Link>
         <Divider orientation="vertical" color="text.gray" w="1px" h="16px" />
-        <Box as="button" fontSize="25px" pt="5px">
-          <Icon as={IoMdNotificationsOutline} />
-        </Box>
+        <Notification notifications={notifications} setNotifications={setNotifications} />
         <HStack as="button">
           <Avatar size="sm" />
           <Text fontWeight="500">{userInfo?.username}</Text>
