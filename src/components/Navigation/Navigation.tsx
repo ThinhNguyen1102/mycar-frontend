@@ -1,4 +1,4 @@
-import {Avatar, Box, Divider, HStack, Text} from '@chakra-ui/react'
+import {Avatar, Box, Divider, HStack, Icon, Text} from '@chakra-ui/react'
 import {Link, useLocation, useNavigate} from 'react-router-dom'
 import ConnectWallet from './ConnectWallet'
 import useUserLoginInfoStore from '../../hooks/user-login-info.store'
@@ -9,6 +9,7 @@ import {CarRentalPost, NotificationRes} from '../../types/api-response.type'
 import {useShallow} from 'zustand/react/shallow'
 import Notification from './Notification'
 import {pusherClient} from '../../libs/pusher'
+import {FaCar} from 'react-icons/fa'
 
 function Navigation() {
   const userInfo = useUserLoginInfoStore(useShallow(state => state.userInfo))
@@ -85,7 +86,7 @@ function Navigation() {
       zIndex="10"
     >
       <Link to="/">
-        <Text fontWeight="500">Logo</Text>
+        <Icon fontSize="42px" as={FaCar} />
       </Link>
 
       <HStack gap="20px">

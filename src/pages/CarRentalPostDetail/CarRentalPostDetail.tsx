@@ -1,4 +1,4 @@
-import {Box, Center, Grid, GridItem, HStack, VStack} from '@chakra-ui/react'
+import {Center, HStack, VStack} from '@chakra-ui/react'
 import {useParams} from 'react-router-dom'
 import PostDetailInfo from './components/PostDetailInfo'
 import PostDetailCost from './components/PostDetailCost'
@@ -7,7 +7,6 @@ import {CarRentalPost} from '../../types/api-response.type'
 import callApi from '../../utils/api'
 import PageLoading from '../../components/PageLoading'
 import GlobalLoading from '../../components/GlobalLoading'
-import {Slide} from 'react-slideshow-image'
 import 'react-slideshow-image/dist/styles.css'
 
 function CarRentalPostDetail() {

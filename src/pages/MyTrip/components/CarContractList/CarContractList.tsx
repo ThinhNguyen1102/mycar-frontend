@@ -31,7 +31,7 @@ function CarContractList() {
 
     const fetchCarContracts = async () => {
       const {data: carContractsRes} = await callApi<GetCarContractsRes>(
-        `/api/v1/car-contracts?type=${types.join(';')}&page=${currentPage}&limit=2&status=${statuses.join(';')}`,
+        `/api/v1/car-contracts?type=${types.join(';')}&page=${currentPage}&limit=10&status=${statuses.join(';')}`,
         'GET',
         null
       )

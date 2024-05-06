@@ -1,4 +1,4 @@
-import {CarContractStatus} from '../enums/common.enum'
+import {CarContractStatus, NotificationType} from '../enums/common.enum'
 import {UserInfo} from './common.type'
 
 export type CarRentalPost = {
@@ -102,4 +102,6 @@ export type NotificationRes = {
   created_at: Date
   updated_at: Date
   user_id: number
+  contract_id: number
+  type: NotificationType
 }

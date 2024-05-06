@@ -27,3 +27,10 @@ export enum CarContractMessageType {
   START_CAR_CONTRACT = 'call::start_contract',
   END_CAR_CONTRACT = 'call::end_contract'
 }
+
+export enum NotificationType {
+  ERROR = 'error',
+  WARNING = 'warning',
+  INFO = 'info',
+  SUCCESS = 'success'
+}

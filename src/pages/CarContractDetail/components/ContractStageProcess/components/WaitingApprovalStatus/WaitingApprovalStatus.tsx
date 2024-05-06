@@ -83,7 +83,7 @@ export function WaitingApprovalStatusOwner({
         setTimeout(() => {
           setIsLoaded(false)
           navigate(0)
-        }, 1000)
+        }, 2000)
       }
 
       if (txHash) {

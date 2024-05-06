@@ -17,6 +17,7 @@ function CarContractDetail() {
   const [contract, setContract] = useState<CarContract | undefined>()
   const [carRentalPost, setCarRentalPost] = useState<CarRentalPost | undefined>()
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isDetailLoading, setIsDetailLoading] = useState(false)
 
   const updateCarContract = async (status: CarContractStatus, data: CarContractUpdatePayload) => {
     setContract(contract => {
@@ -76,6 +77,8 @@ function CarContractDetail() {
   useEffect(() => {
     if (Number.isNaN(contractId)) return
 
+    setIsDetailLoading(true)
+
     const getCarContract = async () => {
       const {data: carContract} = await callApi<CarContract>(
         `/api/v1/car-contracts/${contractId}/detail`,
@@ -88,6 +91,10 @@ function CarContractDetail() {
         'GET',
         null
       )
+
+      if (carContract && carRentalPost) {
+        setIsDetailLoading(false)
+      }
 
       setContract(carContract)
       setCarRentalPost(carRentalPost)
@@ -103,7 +110,7 @@ function CarContractDetail() {
   return (
     <VStack p="80px 0" w="calc(100vw - 10px)" bg="background">
       <Heading p="30px 0">Hợp đồng chi tiết</Heading>
-      {contract && carRentalPost && (
+      {!isDetailLoading && contract && carRentalPost && (
         <VStack w="80%">
           <ContractStageProcess
             contract={contract}
@@ -116,7 +123,7 @@ function CarContractDetail() {
           </HStack>
         </VStack>
       )}
-      {(!contract || !carRentalPost) && <PageLoading />}
+      {isDetailLoading && <PageLoading />}
       {isLoaded && <GlobalLoading message="Đang tạo hợp đồng, vui lòng đợi trong giây lát!!!" />}
     </VStack>
   )
