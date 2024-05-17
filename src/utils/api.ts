@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const BASEURL = 'http://localhost:1102'
+export const BASEURL = 'https://thinhnguyen.live'
 
 export default function callApi<T>(
   endpoint: string,

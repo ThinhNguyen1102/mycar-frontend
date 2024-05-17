@@ -14,7 +14,7 @@ export default class MycarContract extends BaseSmartContract {
       'https://sepolia.infura.io/v3/b67ddc0d216347899bedfba2b1e50a35'
     )
 
-    super(provider || rpcProvider, '0x75A2D049C866a8eee2548deDeCDe42FDe629a014', MycarAbi)
+    super(provider || rpcProvider, '0x29678534cF9F16DA6321EDE00d074085518A54f5', MycarAbi)
     if (!provider) {
       this._contract = new ethers.Contract(this._contractAddress, this._abis, rpcProvider)
     }
