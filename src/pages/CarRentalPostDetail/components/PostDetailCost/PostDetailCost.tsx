@@ -62,8 +62,8 @@ function PostDetailCost({carRentalPost, setIsLoaded}: PostDetailCostProps) {
         renter_id: userInfo?.id,
         owner_id: carRentalPost?.owner_id,
         post_id: carRentalPost?.id,
-        start_date_ts: range?.from.getTime(),
-        end_date_ts: range?.to.getTime()
+        start_date_ts: add(range?.from, {hours: 10}).getTime(),
+        end_date_ts: add(range?.to, {hours: 10}).getTime()
       })
 
       const txHash = await myCarContract.pay({

@@ -1,4 +1,20 @@
-import {Avatar, Box, Divider, HStack, Icon, Text} from '@chakra-ui/react'
+import {
+  Avatar,
+  Box,
+  Button,
+  Divider,
+  HStack,
+  Icon,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Text,
+  VStack
+} from '@chakra-ui/react'
 import {Link, useLocation, useNavigate} from 'react-router-dom'
 import ConnectWallet from './ConnectWallet'
 import useUserLoginInfoStore from '../../hooks/user-login-info.store'
@@ -110,10 +126,51 @@ function Navigation() {
         </Link>
         <Divider orientation="vertical" color="text.gray" w="1px" h="16px" />
         <Notification notifications={notifications} setNotifications={setNotifications} />
-        <HStack as="button">
-          <Avatar size="sm" />
-          <Text fontWeight="500">{userInfo?.username}</Text>
-        </HStack>
+
+        <Popover>
+          <PopoverTrigger>
+            <HStack as="button">
+              <Avatar size="sm" />
+              <Text fontWeight="500">{userInfo?.username}</Text>
+            </HStack>
+          </PopoverTrigger>
+          <PopoverContent w="300px">
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverHeader>
+              <HStack>
+                <Avatar size="sm" />
+                <Text fontWeight="500">Thông tin tài khoản</Text>
+              </HStack>
+            </PopoverHeader>
+            <PopoverBody>
+              <VStack alignItems="flex-start">
+                <HStack>
+                  <Text fontWeight="500">Email:</Text>
+                  <Text>{userInfo?.email}</Text>
+                </HStack>
+                <Divider />
+                <HStack>
+                  <Text fontWeight="500">Số điện thoại:</Text>
+                  <Text>{userInfo?.phone_number}</Text>
+                </HStack>
+                <Divider />
+                <Button
+                  onClick={() => {
+                    localStorage.removeItem('access_token')
+                    localStorage.removeItem('refresh_token')
+                    navigate('/login')
+                  }}
+                  w="100%"
+                  color="white"
+                  bg="common.error"
+                >
+                  Đăng xuất
+                </Button>
+              </VStack>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
         <ConnectWallet />
       </HStack>
     </HStack>

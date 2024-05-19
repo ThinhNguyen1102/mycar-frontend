@@ -56,11 +56,16 @@ function Login() {
 
   return (
     <HStack h="100vh" w="80vw">
-      <VStack flex="1">
-        <Heading>Poster</Heading>
+      <VStack flex="1" pb="100px">
+        <Heading fontWeight="500" fontSize="42px">
+          Xe của bạn
+        </Heading>
+        <Heading fontWeight="500" fontSize="42px">
+          Hành trình của bạn!
+        </Heading>
       </VStack>
       <VStack flex="1" gap="30px">
-        <Heading>Login</Heading>
+        <Heading fontWeight="500">Đăng nhập</Heading>
         <VStack as="form" gap="0px" onSubmit={handleSubmit(onSubmit)}>
           <Box>
             <Text display="block" as="label" htmlFor="email" mb="5px">
@@ -86,7 +91,7 @@ function Login() {
           </Box>
           <Box>
             <Text display="block" htmlFor="password" as="label" mb="5px">
-              Password
+              Mật Khẩu
             </Text>
             <Input
               id="password"
@@ -109,18 +114,18 @@ function Login() {
           </Box>
           <Box alignSelf="flex-end" mt="15px">
             <Link to="/">
-              <Text textDecoration="underline">Forgot password?</Text>
+              <Text textDecoration="underline">Quên mật khẩu?</Text>
             </Link>
           </Box>
           <Button sx={styles.input} type="submit" mt="15px">
-            Login
+            Đăng nhập
           </Button>
         </VStack>
         <Divider w="50%" />
         <HStack>
-          <Text color="text.gray">Don't have an account?</Text>
+          <Text color="text.gray">Bạn chưa có tài khoản?</Text>
           <Link to="/signup">
-            <Text textDecoration="underline">Create an Account</Text>
+            <Text textDecoration="underline">Tạo tài khoản</Text>
           </Link>
         </HStack>
       </VStack>

@@ -124,7 +124,7 @@ function CarContractDetail() {
         </VStack>
       )}
       {isDetailLoading && <PageLoading />}
-      {isLoaded && <GlobalLoading message="Đang tạo hợp đồng, vui lòng đợi trong giây lát!!!" />}
+      {isLoaded && <GlobalLoading message="Đang xử lý, vui lòng đợi trong ít phút!!!" />}
     </VStack>
   )
 }

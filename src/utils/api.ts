@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 export const BASEURL = 'https://thinhnguyen.live'
+// export const BASEURL = 'http://localhost:1102'
 
 export default function callApi<T>(
   endpoint: string,
@@ -69,6 +70,7 @@ export default function callApi<T>(
         } catch (err) {
           localStorage.removeItem('access_token')
           localStorage.removeItem('refresh_token')
+          window.location.href = '/login'
           console.log('err', err)
           return Promise.reject(err)
         }

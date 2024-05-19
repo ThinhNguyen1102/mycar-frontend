@@ -14,7 +14,7 @@ import {
 import React from 'react'
 import {DateRange, DayPicker, Matcher} from 'react-day-picker'
 import 'react-day-picker/dist/style.css'
-import {format} from 'date-fns'
+import {add, format} from 'date-fns'
 import {vi} from 'date-fns/locale'
 
 interface DateSelectModalProps {
@@ -31,7 +31,7 @@ export type DisableDateRange = {
 }
 
 function DateSelectModal({isOpen, onClose, range, setRange, disabledDays}: DateSelectModalProps) {
-  let footer = 'Please pick the first day.'
+  let footer = 'Chọn ngày bắt đầu và kết thúc thuê xe.'
   if (range?.from) {
     if (!range.to) {
       footer = `${format(range.from, 'EEEE', {locale: vi})}, ${format(range.from, 'P', {locale: vi})}`
@@ -40,7 +40,7 @@ function DateSelectModal({isOpen, onClose, range, setRange, disabledDays}: DateS
     }
   }
 
-  disabledDays?.push({before: new Date()})
+  disabledDays?.push({before: add(new Date(), {hours: 12})})
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="2xl">

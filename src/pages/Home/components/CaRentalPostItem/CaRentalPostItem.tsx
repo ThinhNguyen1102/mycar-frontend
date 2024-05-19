@@ -38,7 +38,7 @@ function CarRentalPostItem({carRentalPost}: CarRentalPostItemProps) {
       </Box>
       <VStack alignItems="flex-start" gap="0">
         <Text p="10px 0" fontSize="18px" fontWeight="500" lineHeight="1">
-          {carRentalPost?.brand + ' - ' + carRentalPost?.model}
+          {carRentalPost?.model}
         </Text>
         <HStack>
           <Box pt="5px">
