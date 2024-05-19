@@ -19,21 +19,18 @@ function Footer() {
       <VStack flex="2" alignItems="flex-start">
         <Text fontWeight="500">Tìm Hiểu Thêm</Text>
         <VStack alignItems="flex-start">
-          <Text color="text.gray">Chính sách bảo mật</Text>
-          <Text color="text.gray">Điều khoản sử dụng</Text>
-          <Text color="text.gray">Chính sách hoàn tiền</Text>
-          <Text color="text.gray">Chính sách bảo mật</Text>
-          <Text color="text.gray">Giải quyết tranh chấp</Text>
+          <Text color="text.gray">Hướng dẫn chung</Text>
+          <Text color="text.gray">Hướng dẫn đặt xe</Text>
+          <Text color="text.gray">Hướng dẫn thanh toán</Text>
+          <Text color="text.gray">Hỏi và trả lời</Text>
         </VStack>
       </VStack>
       <VStack flex="2" alignItems="flex-start">
-        <Text fontWeight="500">Đối Tác</Text>
+        <Text fontWeight="500">Chúng tôi</Text>
         <VStack alignItems="flex-start">
-          <Text color="text.gray">Chính sách bảo mật</Text>
-          <Text color="text.gray">Điều khoản sử dụng</Text>
-          <Text color="text.gray">Chính sách hoàn tiền</Text>
-          <Text color="text.gray">Chính sách bảo mật</Text>
-          <Text color="text.gray">Giải quyết tranh chấp</Text>
+          <Text color="text.gray">Về MyCar</Text>
+          <Text color="text.gray">MyCar Blog</Text>
+          <Text color="text.gray">Tuyển dụng</Text>
         </VStack>
       </VStack>
     </HStack>

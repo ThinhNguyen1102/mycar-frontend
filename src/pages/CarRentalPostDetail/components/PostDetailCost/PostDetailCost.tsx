@@ -97,7 +97,7 @@ function PostDetailCost({carRentalPost, setIsLoaded}: PostDetailCostProps) {
 
   return (
     <VStack mt="20px" alignSelf="flex-start" minW="400px" justifyContent="flex-start">
-      <Box w="400px" m="0 auto" p="0">
+      <Box w="400px" m="0 auto" p="0" zIndex="9">
         <Slide>
           {carRentalPost?.carImages.map((image, index) => {
             console.log(`url(${image})`)

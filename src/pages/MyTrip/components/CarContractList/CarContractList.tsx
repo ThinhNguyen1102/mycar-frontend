@@ -1,4 +1,4 @@
-import {Skeleton, Text, VStack} from '@chakra-ui/react'
+import {Divider, Skeleton, Text, VStack} from '@chakra-ui/react'
 import {useEffect, useState} from 'react'
 import useUserLoginInfoStore from '../../../../hooks/user-login-info.store'
 import {useShallow} from 'zustand/react/shallow'
@@ -53,6 +53,7 @@ function CarContractList() {
         setTypes={setTypes}
         setCurrentPage={setCurrentPage}
       />
+      <Divider w="100%" />
       <Pagination
         numOfPages={numOfPages}
         currentPage={currentPage}
