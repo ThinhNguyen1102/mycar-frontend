@@ -95,8 +95,6 @@ function PostDetailCost({carRentalPost, setIsLoaded}: PostDetailCostProps) {
     }
   }
 
-  console.log(carRentalPost?.carImages)
-
   return (
     <VStack mt="20px" alignSelf="flex-start" minW="400px" justifyContent="flex-start">
       <Box w="400px" m="0 auto" p="0">

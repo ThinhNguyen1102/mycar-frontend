@@ -153,7 +153,11 @@ export function AppovedStatus({contract, setIsLoaded, setContract}: AppovedStatu
           borderRadius="5px"
           alignSelf="flex-end"
           onClick={onOpenStartConfirm}
-          sx={contract.is_processing ? styles.disabled_button : undefined}
+          sx={
+            contract.is_processing || new Date(contract.start_date).getTime() > new Date().getTime()
+              ? styles.disabled_button
+              : undefined
+          }
         >
           <Text fontSize="14px" color="white">
             Bắt đầu
