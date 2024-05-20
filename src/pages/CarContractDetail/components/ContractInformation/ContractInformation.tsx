@@ -184,7 +184,7 @@ function ContractInformation({carRentalPost, contract}: ContractInformationProps
       <HStack w="100%">
         <VStack alignItems="flex-start" gap="0" flex="1">
           <SubTitle title="Thông tin người thuê:" icon={FaUser} />
-          <Text sx={styles.content}>{contract?.owner.username}</Text>
+          <Text sx={styles.content}>{contract?.renter.username}</Text>
           <Text sx={styles.content}>
             E-mail:{' '}
             <Box as="span" fontWeight="500">
@@ -207,17 +207,17 @@ function ContractInformation({carRentalPost, contract}: ContractInformationProps
         </VStack>
         <VStack alignItems="flex-start" gap="0" flex="1">
           <SubTitle title="Thông tin chủ xe:" icon={FaUser} />
-          <Text sx={styles.content}>{contract?.renter.username}</Text>
+          <Text sx={styles.content}>{contract?.owner.username}</Text>
           <Text sx={styles.content}>
             E-mail:{' '}
             <Box as="span" fontWeight="500">
-              {contract?.renter.email}
+              {contract?.owner.email}
             </Box>
           </Text>
           <Text sx={styles.content}>
             Điện thoại:{' '}
             <Box as="span" fontWeight="500">
-              {contract?.renter.phone_number}
+              {contract?.owner.phone_number}
             </Box>
           </Text>
           <Text sx={styles.content}>
