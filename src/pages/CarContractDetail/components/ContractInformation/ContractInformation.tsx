@@ -197,6 +197,13 @@ function ContractInformation({carRentalPost, contract}: ContractInformationProps
               {contract?.renter.phone_number}
             </Box>
           </Text>
+          <Text sx={styles.content}>
+            Địa chỉ ví:{' '}
+            <Box as="span" fontWeight="500">
+              {contract.renter_wallet_address.slice(0, 6)}...
+              {contract.renter_wallet_address.slice(-4)}
+            </Box>
+          </Text>
         </VStack>
         <VStack alignItems="flex-start" gap="0" flex="1">
           <SubTitle title="Thông tin chủ xe:" icon={FaUser} />
@@ -211,6 +218,13 @@ function ContractInformation({carRentalPost, contract}: ContractInformationProps
             Điện thoại:{' '}
             <Box as="span" fontWeight="500">
               {contract?.renter.phone_number}
+            </Box>
+          </Text>
+          <Text sx={styles.content}>
+            Địa chỉ ví:{' '}
+            <Box as="span" fontWeight="500">
+              {contract.owner_wallet_address.slice(0, 6)}...
+              {contract.owner_wallet_address.slice(-4)}
             </Box>
           </Text>
         </VStack>
