@@ -22,6 +22,7 @@ import {useState} from 'react'
 import {IoIosCheckmarkCircleOutline} from 'react-icons/io'
 import useContractStore from '../../../../hooks/contract.store'
 import {CarContractSM} from '../../../../types/contract.type'
+import {CarContractStatus} from '../../../../enums/common.enum'
 
 interface ContractInformationProps {
   carRentalPost: CarRentalPost
@@ -149,7 +150,7 @@ function ContractInformation({carRentalPost, contract}: ContractInformationProps
           </Text>
         </Box>
         <Spacer />
-        {!isVerified && (
+        {!isVerified && contract.contract_status !== CarContractStatus.WAITING_APPROVAL && (
           <Button
             p="0px 10px"
             minW="80px"
@@ -165,7 +166,7 @@ function ContractInformation({carRentalPost, contract}: ContractInformationProps
             {isVerifying && <Spinner size="sm" color="white" />}
           </Button>
         )}
-        {isVerified && (
+        {isVerified && contract.contract_status !== CarContractStatus.WAITING_APPROVAL && (
           <HStack>
             <Text fontSize="12px" fontWeight="500" color="common.success">
               ĐÃ XÁC MINH
