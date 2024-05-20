@@ -31,10 +31,7 @@ function CarRentalPostItem({carRentalPost}: CarRentalPostItemProps) {
       }}
     >
       <Box borderRadius="10px" overflow="hidden">
-        <img
-          src="https://fastly.picsum.photos/id/661/4000/3000.jpg?hmac=WokO6IXmoR3EcbrvUN5ugRK95zwbbwjrUtAZZMEuVO0"
-          alt="car"
-        />
+        <img src={carRentalPost?.carImages[0]} alt="car" />
       </Box>
       <VStack alignItems="flex-start" gap="0">
         <Text p="10px 0" fontSize="18px" fontWeight="500" lineHeight="1">

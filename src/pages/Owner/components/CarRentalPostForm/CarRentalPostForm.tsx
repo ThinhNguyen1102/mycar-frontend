@@ -24,6 +24,8 @@ import {TiDeleteOutline} from 'react-icons/ti'
 import AddressSelectModel from '../../../../components/AddressSelectModal'
 import {CarRentalPost} from '../../../../types/api-response.type'
 import axios from 'axios'
+import useCarRentalPostStore from '../../../../hooks/car-rental-post.store'
+import GlobalLoading from '../../../../components/GlobalLoading'
 
 type ImageLocal = {
   url: string
@@ -57,6 +59,9 @@ function CarRentalPostForm({currentEditPost, setCurrentEditPost}: CarRentalPostF
   const [imagesLocal, setImagesLocal] = useState<ImageLocal[]>([])
   const {isOpen: isOpenAddress, onOpen: onOpenAddress, onClose: onCloseAddress} = useDisclosure()
   const [address, setAddress] = useState<Address>()
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  const setCarRentalPost = useCarRentalPostStore(state => state.setCarRentalPosts)
 
   const {
     register,
@@ -97,21 +102,27 @@ function CarRentalPostForm({currentEditPost, setCurrentEditPost}: CarRentalPostF
   }, [currentEditPost, setValue])
 
   const onSubmit = async (data: CarRentalInputs) => {
+    setIsLoaded(true)
     const formData = new FormData()
     imagesLocal.forEach((val, index) => {
       formData.append(`image`, val.file)
     })
 
-    const {data: images} = await axios.post(
-      'http://localhost:1102/api/v1/car-rental-posts/upload/images',
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: 'Bearer ' + localStorage.getItem('access_token')
+    let images: string[] = []
+    if (imagesLocal.length > 0) {
+      const res = await axios.post(
+        'https://thinhnguyen.live/api/v1/car-rental-posts/upload/images',
+        // 'http://localhost:1102/api/v1/car-rental-posts/upload/images',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: 'Bearer ' + localStorage.getItem('access_token')
+          }
         }
-      }
-    )
+      )
+      images = res.data
+    }
 
     const formatData = {
       district_name: address?.district_name,
@@ -130,9 +141,10 @@ function CarRentalPostForm({currentEditPost, setCurrentEditPost}: CarRentalPostF
       deodorization_fee: data.deodorization_fee,
       year: data.year,
       consumption: data.consumption,
-      car_image_urls: images,
+      car_image_urls: images.length > 0 ? images : currentEditPost?.carImages,
       car_feature_ids: features.map((_, index) => index + 1)
     }
+
     try {
       if (currentEditPost) {
         const {data: response} = await callApi<any>(
@@ -143,18 +155,35 @@ function CarRentalPostForm({currentEditPost, setCurrentEditPost}: CarRentalPostF
         if (response) {
           console.log('update post ok')
           setCurrentEditPost(null)
+
+          const {data: carRentalPosts}: {data: CarRentalPost[]} = await callApi<any>(
+            `/api/v1/car-rental-posts`,
+            'GET',
+            null
+          )
+          setCarRentalPost(carRentalPosts)
+
+          setIsLoaded(false)
         }
       } else {
         const {data: response} = await callApi<any>('/api/v1/car-rental-posts', 'POST', formatData)
         if (response) {
           console.log('create post ok')
+          const {data: carRentalPosts}: {data: CarRentalPost[]} = await callApi<any>(
+            `/api/v1/car-rental-posts`,
+            'GET',
+            null
+          )
+          setCarRentalPost(carRentalPosts)
         }
       }
+      setIsLoaded(false)
       reset()
       setFeatures([])
       setImagesLocal([])
       setAddress(undefined)
     } catch (err) {
+      setIsLoaded(false)
       console.log(err)
     }
   }
@@ -622,6 +651,7 @@ function CarRentalPostForm({currentEditPost, setCurrentEditPost}: CarRentalPostF
         address={address}
         setAddress={setAddress}
       />
+      {isLoaded && <GlobalLoading message="Đang xử lý, vui lòng đợi trong ít phút!!!" />}
     </VStack>
   )
 }
