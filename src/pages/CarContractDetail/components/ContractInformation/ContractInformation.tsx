@@ -222,10 +222,13 @@ function ContractInformation({carRentalPost, contract}: ContractInformationProps
           </Text>
           <Text sx={styles.content}>
             Địa chỉ ví:{' '}
-            <Box as="span" fontWeight="500">
-              {contract.owner_wallet_address.slice(0, 6)}...
-              {contract.owner_wallet_address.slice(-4)}
-            </Box>
+            {contract.owner_wallet_address && (
+              <Box as="span" fontWeight="500">
+                {contract.owner_wallet_address.slice(0, 6)}...
+                {contract.owner_wallet_address.slice(-4)}
+              </Box>
+            )}
+            {!contract.owner_wallet_address && 'Chưa xác định'}
           </Text>
         </VStack>
       </HStack>
