@@ -204,6 +204,7 @@ function ContractInformation({carRentalPost, contract}: ContractInformationProps
               {contract.renter_wallet_address.slice(0, 6)}...
               {contract.renter_wallet_address.slice(-4)}
             </Box>
+            {!contract.renter_wallet_address && 'Chưa xác định'}
           </Text>
         </VStack>
         <VStack alignItems="flex-start" gap="0" flex="1">
