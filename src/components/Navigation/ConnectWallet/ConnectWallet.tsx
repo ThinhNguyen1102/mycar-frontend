@@ -1,18 +1,22 @@
-import {Button, HStack, Icon, Text} from '@chakra-ui/react'
+import {Button, HStack, Icon, Spinner, Text, useToast} from '@chakra-ui/react'
 import {ethers} from 'ethers'
 import {FaEthereum} from 'react-icons/fa'
 import useContractStore, {ContractState} from '../../../hooks/contract.store'
+import {useState} from 'react'
 
 declare var window: any
 
 function ConnectWallet() {
   const setWalletInfo = useContractStore((state: ContractState) => state.setWalletInfo)
+  const toast = useToast()
   const address = useContractStore((state: ContractState) => state.address)
   const balance = useContractStore((state: ContractState) => state.balance)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   const onConnectMetamask = async () => {
+    setIsLoaded(true)
     try {
-      if (window.ethereum) {
+      if (window?.ethereum) {
         if (address) return
         const provider = new ethers.providers.Web3Provider(window.ethereum)
         await provider.send('eth_requestAccounts', [])
@@ -22,23 +26,43 @@ function ConnectWallet() {
         const ethBalance = Number.parseFloat(ethers.utils.formatEther(bigBalance))
 
         setWalletInfo(newAddress, ethBalance, provider)
+        setIsLoaded(false)
       } else {
+        setIsLoaded(false)
         console.error('Please install MetaMask!')
+        toast({
+          title: 'Vui lòng cài đặt MetaMask!',
+          status: 'warning',
+          duration: 3000,
+          position: 'top-right',
+          isClosable: true
+        })
       }
     } catch (err) {
       console.error(err)
+      setIsLoaded(false)
+      toast({
+        title: 'Kết nối ví thất bại!',
+        status: 'error',
+        duration: 3000,
+        position: 'top-right',
+        isClosable: true
+      })
     }
   }
 
-  window.ethereum.on('accountsChanged', onConnectMetamask)
+  if (window?.ethereum) window.ethereum.on('accountsChanged', onConnectMetamask)
 
   return (
     <>
       {!address && (
-        <Button onClick={onConnectMetamask}>
-          <Text minW="200px" fontSize="12px" fontWeight="bold">
-            KẾT NỐI VÍ
-          </Text>
+        <Button minW="200px" onClick={onConnectMetamask}>
+          {!isLoaded && (
+            <Text fontSize="12px" fontWeight="bold">
+              KẾT NỐI VÍ
+            </Text>
+          )}
+          {isLoaded && <Spinner size="sm" color="white" />}
         </Button>
       )}
       {address && (
