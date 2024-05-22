@@ -200,10 +200,12 @@ function ContractInformation({carRentalPost, contract}: ContractInformationProps
           </Text>
           <Text sx={styles.content}>
             Địa chỉ ví:{' '}
-            <Box as="span" fontWeight="500">
-              {contract.renter_wallet_address.slice(0, 6)}...
-              {contract.renter_wallet_address.slice(-4)}
-            </Box>
+            {contract.renter_wallet_address && (
+              <Box as="span" fontWeight="500">
+                {contract.renter_wallet_address.slice(0, 6)}...
+                {contract.renter_wallet_address.slice(-4)}
+              </Box>
+            )}
             {!contract.renter_wallet_address && 'Chưa xác định'}
           </Text>
         </VStack>
